@@ -10,30 +10,83 @@
 			margin:0px;
 		}
 		@keyframes fade { 
-		  from { opacity: 0.25; } 
+			from { opacity: 0.25; } 
 		}
 
 		.blinking {
-		  animation: fade 2s infinite alternate;
+			animation: fade 2s infinite alternate;
 		}
 		
-		.path{
+		.path {
 			font-size: 1.4em;
 			text-align: center;
 			vertical-align: middle;
 			opacity: 1;
 		}
-		.location{
+		.location {
 			font-size: 1.3em;
 			text-align: center;
 			vertical-align: middle;
 			opacity: 1;
-		} 
-	</style>
+		}
+		
+		.tooltip{
+			position: relative;
+			display: inline;
+		}
+		
+		.tooltip:after{
+			font-size: 9pt;
+			display: block;
+			visibility: hidden;
+			position: absolute;
+			bottom: 0;
+			left: 120%;
+			opacity: 0;
+			content: attr(tooltip); /* might also use attr(title) */
+			height: auto;
+			min-width: 100px;
+			padding: 5px 8px;
+			z-index: 999;
+			color: #000; /* textcolor */
+			text-decoration: none;
+			text-align: center;
+			background: rgba(255,255,255,0.85); /* backgroundcolor */
+			-webkit-border-radius: 5px;
+			-moz-border-radius: 5px;
+			border-radius: 5px;
+		}
+		
+		.tooltip:before {
+			position: absolute;
+			visibility: hidden;
+			width: 0;
+			height: 0;
+			left: 120%;
+			bottom: 0px;
+			opacity: 0;
+			content: "";
+			border-style: solid;
+			border-width: 6px 6px 0 6px;
+			border-color: rgba(255,255,255,0.85) transparent transparent transparent;
+		}
+		
+		.tooltip:hover:after{
+			visibility: visible;
+			opacity: 1;
+			bottom: 20px;
+		}
+		
+		.tooltip:hover:before{
+			visibility: visible;
+			opacity: 1;
+			bottom: 14px;
+		}
+		</style>
 
 	<!-- ensure mobile compatibility -->	
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-	
+		
 	<!-- load leaflet API -->
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
 	integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="crossorigin=""/>
@@ -47,6 +100,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.4.0/gpx.min.js"></script>
     <script src="leaflet.measure.js"></script>
     <script src="easy-button.js"></script>
+    <script src='togpx.js'></script>
+    <script src="FileSaver.js"></script>
 	<script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
 
 	<!-- load google API -->
@@ -96,7 +151,7 @@
 				keyboard: true,	//  weather to use keyboard control for this plugin
 				activeKeyCode: 'M'.charCodeAt(0),	//  shortcut to activate measure
 				cancelKeyCode: 27,	//  shortcut to cancel measure, defaults to 'Esc'
-				lineColor: 'red',
+				lineColor: '#a8250d',
 				lineWeight: 2,
 				lineDashArray: '1, 0',
 				lineOpacity: 1,
@@ -162,26 +217,41 @@
 		
 		var location_on = false;
 		function enableLocationTracking(map){
-			L.easyButton('<span class="location"><ion-icon name="navigate-outline"></ion-icon></span>', function(btn, map){
-				if(location_on) {
-					map_ll.setView(position);
-				}
-				else {
-					map_ll.locate({setView: true, watch: true, maxZoom: 16, enableHighAccuracy: true});  
-					location_on = true;
-				}
-			}).addTo( map_ll );
-		}
-
+			L.easyButton({
+				states: [{
+					stateName: 'enable',
+					icon:      '<span class="location"><ion-icon name="navigate-outline"></ion-icon></span>',
+					title:     'enable GPS tracking',
+					onClick: function(btn, map) {
+						map.locate({
+							setView: true,
+							watch: true,
+							maxZoom: 16,
+							enableHighAccuracy: true});  
+							location_on = true;
+							btn.state('recalculate'); // change state on click!
+						}
+					},
+					{
+						stateName: 'recalculate',
+						icon:      '<span class="location"><ion-icon name="navigate"></ion-icon></span>',
+						title:     'click to recalculate position',
+						onClick: function(btn, map) {
+							map.setView(position);
+						}
+					}]}
+				).addTo( map );
+			}
 		
-		function loadSheetsOnce(map) {
+		
+		function loadSheetsOnce(map, sheetsUrl, googleApiKey) {
 			var locations = [];
-					
+			
 			// Replace the ID of your Google spreadsheet (containing latitude and longitude columns) and you API key in the URL, returning JSON:
 			// https://sheets.googleapis.com/v4/spreadsheets/ID_OF_YOUR_GOOGLE_SPREADSHEET/values/Sheet1!A2:Q?key=YOUR_API_KEY
 			// Also make sure your API key is authorised to access Google Sheets API - you can enable that through your Google Developer console.
 			$.getJSON(
-				"https://sheets.googleapis.com/v4/spreadsheets/1fBLlw8xlO_yhL8rYfFlQnzvKR-swEtE7NRX41ysARCk/values/Sheet1!A2:Q?key=AIzaSyD2zAhW-KYDHxNpmw-fageO-KRKLzh1PCM",
+				"https://sheets.googleapis.com/v4/spreadsheets/" + sheetsUrl + "?key=" + googleApiKey,
 				function(data) {
 					// data.values contains the array of rows from the spreadsheet. Each row is also an array of cell values.
 					$(data.values).each(function() {
@@ -198,8 +268,36 @@
 				}
 			});
 		}
-					
-		function loadSheetsRealtime(map) {						
+		
+		
+		function loadSheetsRealtime_button(map){
+			L.easyButton({
+				states: [{
+					stateName: 'enable',
+					icon:      '<span class="location"><ion-icon name="eye-outline"></ion-icon></span>',
+					title:     'enable realtime locations import via google sheets',
+					onClick: function(btn, map){
+						var sheetsUrl = prompt( 'geef de spreadsheet ID & eventueel sheet name + range (in volgende formaat: <id>/values/Sheet1!A1:Z)' );
+						var googleApiKey = prompt( 'geef je Google API Key' );
+						if(sheetsUrl != '' && googleApiKey != ''){
+							loadSheetsRealtime(map, sheetsUrl, googleApiKey);
+							btn.state('disable'); // change state on click!
+						}
+					}
+					},
+					{
+						stateName: 'disable',
+						icon:      '<span class="location"><ion-icon name="eye"></ion-icon></span>',
+						title:     'disable realtime locations',
+						onClick: function(btn, map) {
+							btn.state('enable'); // change state on click!
+						}
+					}]}
+			).addTo( map );
+		}
+		
+		
+		function loadSheetsRealtime(map, sheetsUrl, googleApiKey) {						
 			realtime = realtimeLocations(
 				function(success, error) {
 					
@@ -207,7 +305,7 @@
 						// Replace the ID of your Google spreadsheet (containing latitude and longitude columns) and you API key in the URL, returning JSON:
 						// https://sheets.googleapis.com/v4/spreadsheets/ID_OF_YOUR_GOOGLE_SPREADSHEET/values/Sheet1!A2:Q?key=YOUR_API_KEY
 						// Also make sure your API key is authorised to access Google Sheets API - you can enable that through your Google Developer console.
-						"https://sheets.googleapis.com/v4/spreadsheets/1oWjL4hGJHHG0RD4WoukzIsta4aXwB6OBYxmqQAsP7ag/values/Groep Gegevens!A2:K?key=AIzaSyD2zAhW-KYDHxNpmw-fageO-KRKLzh1PCM",
+						"https://sheets.googleapis.com/v4/spreadsheets/" + sheetsUrl + "?key=" + googleApiKey,
 						function(data) {														
 							var locations = [];
 							var labels_1 = [];						
@@ -375,6 +473,7 @@
 					async: true,
 					marker_options: {
 						startIconUrl: '',
+						wptIconUrls: '',
 						endIconUrl: '',
 						shadowUrl: ''
 					},
@@ -405,7 +504,7 @@
 				x.setAttribute("oninput", "loadFiles();");
 				document.body.appendChild(x);  
 				$('#fileinput').trigger('click');
-			}).addTo( map_ll );
+			}, 'import GPX routes').addTo( map_ll );
 		}
 		
 		function loadGPXroutesUrls(map, fileUrls) {
@@ -454,16 +553,18 @@
 			
 			enableLocationTracking(map_ll);
 			enableGPXupload(map_ll);
+			
 			//loadGPXroutesUrls(map_ll, fileUrls);
 			var fileUrls = [
 				'https://dl.dropbox.com/s/nj9le88mfcttbgp/adventure%20route.gpx?dl=0',
 				'https://dl.dropbox.com/s/b7s10x5zq2d1e33/hardcore%20route.gpx?dl=0',
 				'https://dl.dropbox.com/s/ywnm12r44ig9k3w/mystery%20route.gpx?dl=0'
 			];
-								
+							
 			//loadSheetsOnce(map_ll);
-			realtime = loadSheetsRealtime(map_ll);
+			loadSheetsRealtime_button(map_ll);
 			
+						
 			<!-- disable right click -->
 			document.oncontextmenu = document.body.oncontextmenu = function() {return false;}
 		</script>				
