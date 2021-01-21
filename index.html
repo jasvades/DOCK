@@ -123,7 +123,7 @@
 		var tileLayers;
 		
 		function initialiseMap() {
-			var map = L.map('map', {closePopupOnClick: false}).setView([51.094401,  4.225812], 2);
+			var map = L.map('map', {closePopupOnClick: false}).fitWorld();
 			
 			var tileURLs = new Array();
 			
@@ -225,9 +225,7 @@
 					onClick: function(btn, map) {
 						map.locate({
 							setView: true,
-							watch: true,
-							maxZoom: 16,
-							enableHighAccuracy: true});  
+							maxZoom: 16});  
 							location_on = true;
 							btn.state('recalculate'); // change state on click!
 						}
@@ -305,6 +303,7 @@
 						// Replace the ID of your Google spreadsheet (containing latitude and longitude columns) and you API key in the URL, returning JSON:
 						// https://sheets.googleapis.com/v4/spreadsheets/ID_OF_YOUR_GOOGLE_SPREADSHEET/values/Sheet1!A2:Q?key=YOUR_API_KEY
 						// Also make sure your API key is authorised to access Google Sheets API - you can enable that through your Google Developer console.
+						//"https://sheets.googleapis.com/v4/spreadsheets/1oWjL4hGJHHG0RD4WoukzIsta4aXwB6OBYxmqQAsP7ag/values/Groep Gegevens!A2:K?key=AIzaSyD2zAhW-KYDHxNpmw-fageO-KRKLzh1PCM",
 						"https://sheets.googleapis.com/v4/spreadsheets/" + sheetsUrl + "?key=" + googleApiKey,
 						function(data) {														
 							var locations = [];
