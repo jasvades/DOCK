@@ -70,9 +70,9 @@
 		}
 		// make gpx object
 		var gpx = {"gpx": {
-			"@xmlns":"http://www.topografix.com/GPX/1/1",
-			"@xmlns:xsi":"http://www.w3.org/2001/XMLSchema-instance",
-			"@xsi:schemaLocation":"http://www.topografix.com/GPX/1/1 http://www.topografix.com/GPX/1/1/gpx.xsd",
+			"@xmlns":"https://www.topografix.com/GPX/1/1",
+			"@xmlns:xsi":"https://www.w3.org/2001/XMLSchema-instance",
+			"@xsi:schemaLocation":"https://www.topografix.com/GPX/1/1 https://www.topografix.com/GPX/1/1/gpx.xsd",
 			"@version":"1.1",
 			"metadata": null,
 			"wpt": [],
@@ -207,7 +207,7 @@
 	* https://developer.mozilla.org/en-US/docs/JXON
 	*
 	* This framework is released under the GNU Public License, version 3 or later.
-	* http://www.gnu.org/licenses/gpl-3.0-standalone.html
+	* https://www.gnu.org/licenses/gpl-3.0-standalone.html
 	*
 	* small modifications performed by the iD project:
 	* https://github.com/openstreetmap/iD/commits/18aa33ba97b52cacf454e95c65d154000e052a1f/js/lib/jxon.js

@@ -279,7 +279,7 @@
 					onClick: function(btn, map){
 						var sheetsUrl = prompt( 'geef de spreadsheet ID & eventueel sheet name + range (in volgende formaat: <id>/values/Sheet1!A1:Z)' );
 						var googleApiKey = prompt( 'geef je Google API Key' );
-						if(sheetsUrl != '' && googleApiKey != ''){
+						if(sheetsUrl != '' && googleApiKey != '' && sheetsUrl != null && googleApiKey != null){
 							loadSheetsRealtime(map, sheetsUrl, googleApiKey);
 							btn.state('disable'); // change state on click!
 						}
