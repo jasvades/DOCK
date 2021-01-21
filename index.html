@@ -129,7 +129,7 @@
 			
 			tileURLs['thunderforest - landscape'] = 'https://tile.thunderforest.com/landscape/{z}/{x}/{y}{r}.png?apikey=f3489ae724f24f8596a74bac7100dabd';
 			tileURLs['mapbox'] = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}';
-			tileURLs['openstreetmap - classic'] = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+			tileURLs['openstreetmap - classic'] = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 			
 			tileLayers = new Array();
 			
@@ -225,7 +225,9 @@
 					onClick: function(btn, map) {
 						map.locate({
 							setView: true,
-							maxZoom: 16});  
+							watch: true,
+							maxZoom: 16,
+							enableHighAccuracy: true});  
 							location_on = true;
 							btn.state('recalculate'); // change state on click!
 						}
