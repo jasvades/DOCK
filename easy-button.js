@@ -369,7 +369,10 @@
 					// it's a class list, figure out what kind
 				} else {
 					ambiguousIconString = ambiguousIconString.replace(/(^\s*|\s*$)/g,'');
-					tmpIcon = L.DomUtil.create('span', '');					
+					tmpIcon = L.DomUtil.create('span', '');	
+					tmpIcon.style.display = 'flex';
+					tmpIcon.style.justifyContent = 'center';
+					tmpIcon.style.alignItems = 'center';				
 
 					if( ambiguousIconString.indexOf('fa-') === 0 ){
 						L.DomUtil.addClass(tmpIcon, 'fa '  + ambiguousIconString)
