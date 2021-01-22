@@ -139,7 +139,8 @@
 			tileLayers['openstreetmap - classic'].addTo(map);
 			
 			L.control.layers(tileLayers).addTo(map);
-			L.control.scale().addTo(map);	
+			L.control.scale().addTo(map);
+			map.zoomControl.getContainer().style.fontSize = '16px';	
 			
 			measure_control = L.control.measure({
 				position: 'topleft',
