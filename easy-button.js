@@ -366,6 +366,8 @@
 				} else {
 					ambiguousIconString = ambiguousIconString.replace(/(^\s*|\s*$)/g,'');
 					tmpIcon = L.DomUtil.create('span', '');
+					tmpIcon.style.position = 'absolute';
+					
 
 					if( ambiguousIconString.indexOf('fa-') === 0 ){
 						L.DomUtil.addClass(tmpIcon, 'fa '  + ambiguousIconString)
