@@ -173,8 +173,9 @@
 						this.button.setAttribute('type', 'button');
 						this.button.style.backgroundColor = 'white';
 						this.button.style.border = 'none';
-						this.button.style.height = '30px';
-						this.button.style.width = '30px';
+						this.button.style.fontSize = '16px';
+						this.button.style.height = '1.85em';
+						this.button.style.width = '1.85em';
 					}
 
 					if (this.options.id ){

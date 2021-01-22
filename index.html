@@ -17,12 +17,8 @@
 			animation: fade 2s infinite alternate;
 		}
 		
-		.path {
-			text-align: center;
-			vertical-align: middle;
-			opacity: 1;
-		}
-		.location {
+		.easybutton {
+			font-size: 1em;
 			text-align: center;
 			vertical-align: middle;
 			opacity: 1;
@@ -218,7 +214,7 @@
 			L.easyButton({
 				states: [{
 					stateName: 'enable',
-					icon:      '<span class="location"><ion-icon name="navigate-outline"></ion-icon></span>',
+					icon:      '<span class="easybutton"><ion-icon name="navigate-outline"></ion-icon></span>',
 					title:     'enable GPS tracking',
 					onClick: function(btn, map) {
 						map.locate({
@@ -232,7 +228,7 @@
 					},
 					{
 						stateName: 'recalculate',
-						icon:      '<span class="location"><ion-icon name="navigate"></ion-icon></span>',
+						icon:      '<span class="easybutton"><ion-icon name="navigate"></ion-icon></span>',
 						title:     'click to recalculate position',
 						onClick: function(btn, map) {
 							map.setView(position);
@@ -272,7 +268,7 @@
 			L.easyButton({
 				states: [{
 					stateName: 'enable',
-					icon:      '<span class="location"><ion-icon name="eye-outline"></ion-icon></span>',
+					icon:      '<span class="easybutton"><ion-icon name="eye-outline"></ion-icon></span>',
 					title:     'enable realtime locations import via google sheets',
 					onClick: function(btn, map){
 						var sheetsUrl = prompt( 'geef de spreadsheet ID & eventueel sheet name + range (in volgende formaat: <id>/values/Sheet1!A1:Z)' );
@@ -285,7 +281,7 @@
 					},
 					{
 						stateName: 'disable',
-						icon:      '<span class="location"><ion-icon name="eye"></ion-icon></span>',
+						icon:      '<span class="easybutton"><ion-icon name="eye"></ion-icon></span>',
 						title:     'disable realtime locations',
 						onClick: function(btn, map) {
 							btn.state('enable'); // change state on click!
