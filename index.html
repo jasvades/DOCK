@@ -250,15 +250,23 @@
 		
 		
 		var position;
-		var my_location;						
+		var my_location;
+		var my_location_radius;						
 		function onLocationFound(e) {
 		    var radius = e.accuracy;
 			
 			position = e.latlng;
-		    my_location = L.marker(e.latlng).addTo(map_ll)
-		        .bindPopup("Je bent " + radius + " meter van dit punt").openPopup();
+		    if(!location_on){
+				my_location = L.marker(e.latlng).addTo(map_ll)
+		        	.bindPopup("Je bent " + radius + " meter van dit punt").openPopup();
 
-		    L.circle(e.latlng, radius).addTo(map_ll);
+		    	my_location_radius = L.circle(e.latlng, radius).addTo(map_ll);
+				location_on = true;
+		    }
+			else{
+			    my_location = L.marker(e.latlng).update(my_location);
+		    	my_location_radius = L.circle(e.latlng, radius).update(my_location_radius);
+			}
 		}
 
 		
@@ -280,7 +288,6 @@
 							watch: true,
 							maxZoom: 16,
 							enableHighAccuracy: true});  
-							location_on = true;
 							btn.state('recalculate'); // change state on click!
 						}
 					},
