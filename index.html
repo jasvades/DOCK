@@ -116,7 +116,7 @@
 		var tileLayers;
 		
 		function initialiseMap() {
-			var map = L.map('map', {closePopupOnClick: false, zoomControl: false}).fitWorld();
+			var map = L.map('map', {closePopupOnClick: false}).fitWorld();
 			
 			var tileURLs = new Array();
 			
@@ -138,11 +138,6 @@
 			
 			L.control.layers(tileLayers).addTo(map);
 			L.control.scale().addTo(map);
-			L.control.zoom({
-				fontSize: '18px',
-				height: '1.65em',
-				width: '1.65em'
-			}).addTo(map);
 			
 			measure_control = L.control.measure({
 				position: 'topleft',
