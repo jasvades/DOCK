@@ -173,9 +173,9 @@
 						this.button.setAttribute('type', 'button');
 						this.button.style.backgroundColor = 'white';
 						this.button.style.border = 'none';
-						this.button.style.fontSize = '16px';
-						this.button.style.height = '1.85em';
-						this.button.style.width = '1.85em';
+						this.button.style.fontSize = '18px';
+						this.button.style.height = '1.65em';
+						this.button.style.width = '1.65em';
 					}
 
 					if (this.options.id ){
