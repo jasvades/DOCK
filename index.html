@@ -235,11 +235,11 @@
 				}	
 			});
 			
-			if (popup.isOpen() && event.type === 'mousedown'){
+			if (popup.isOpen() && event.type === 'mousedown' && (screen.width >= 480)){
 				popup.remove();
 				popupOpen = true;	
 			}
-			else if (! popupOpen && event.type === 'mousedown'){
+			else if (! popupOpen && event.type === 'mousedown' && (screen.width >= 480)){
 				popup
 				.setLatLng(event.latlng)
 				.setContent("De coördinaten van dit punt zijn: " + event.latlng.toString().substring(6))
