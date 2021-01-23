@@ -249,12 +249,13 @@
 		}
 		
 		
-		var position;						
+		var position;
+		var my_location;						
 		function onLocationFound(e) {
 		    var radius = e.accuracy;
 			
 			position = e.latlng;
-		    L.marker(e.latlng).addTo(map_ll)
+		    my_location = L.marker(e.latlng).addTo(map_ll)
 		        .bindPopup("Je bent " + radius + " meter van dit punt").openPopup();
 
 		    L.circle(e.latlng, radius).addTo(map_ll);
