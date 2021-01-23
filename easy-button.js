@@ -173,9 +173,6 @@
 						this.button.setAttribute('type', 'button');
 						this.button.style.backgroundColor = 'white';
 						this.button.style.border = 'none';
-						this.button.style.fontSize = '18px';
-						this.button.style.height = '1.65em';
-						this.button.style.width = '1.65em';
 					}
 
 					if (this.options.id ){
@@ -344,9 +341,6 @@
 
 				// build the wrapper
 				this.icon = L.DomUtil.create('span', '');
-				this.icon.style.display = 'flex';
-				this.icon.style.justifyContent = 'center';
-				this.icon.style.alignItems = 'center';
 				
 				L.DomUtil.addClass(this.icon, 'button-state state-' + this.stateName.replace(/(^\s*|\s*$)/g,''));
 				this.icon.innerHTML = buildIcon(template.icon);
