@@ -173,7 +173,9 @@
 			var tileURLs = new Array();
 			
 			tileURLs['thunderforest - landscape'] = 'https://tile.thunderforest.com/landscape/{z}/{x}/{y}{r}.png?apikey=f3489ae724f24f8596a74bac7100dabd';
-			tileURLs['mapbox'] = 'https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}';
+			tileURLs['mapbox - streets'] = 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}';
+			tileURLs['mapbox - satellite'] = 'https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/{z}/{x}/{y}?access_token={accessToken}';
+			tileURLs['mapbox - satellite&streets'] = 'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}';
 			tileURLs['openstreetmap - classic'] = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 			
 			tileLayers = new Array();
@@ -181,8 +183,9 @@
 			for (var tile_key in Object.keys(tileURLs)) {
 				tileLayers[Object.keys(tileURLs)[tile_key]] = L.tileLayer(tileURLs[Object.keys(tileURLs)[tile_key]], {
 					attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>' + 'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-					id: 'mapbox/streets-v11',
-					accessToken: 'pk.eyJ1IjoiZHJvcHBpbmdjaGlrYSIsImEiOiJja2dkdXQ4aTQwbXBqMnJsZXNsNTRqdG53In0.H_xtqAmm1KwWN_vQA7Vb-g'
+					accessToken: 'pk.eyJ1IjoiZHJvcHBpbmdjaGlrYSIsImEiOiJja2dkdXQ4aTQwbXBqMnJsZXNsNTRqdG53In0.H_xtqAmm1KwWN_vQA7Vb-g',
+					maxNativeZoom:50,
+					maxZoom:50
 				});
 			}
 
