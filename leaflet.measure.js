@@ -31,7 +31,6 @@ L.Control.Measure = L.Control.extend({
 		var container = L.DomUtil.create('div', className)
 		container.setAttribute('tooltip', 'Measure tool in km unit supporting multi-segment')
 		container.removeAttribute('title')
-		container.style.fontSize = '16px'
 		this._createButton('&#8674;', 'Measure',
 		'leaflet-control-measure leaflet-bar-part leaflet-bar-part-top-and-bottom',
 		container, this._toggleMeasure, this)
@@ -68,12 +67,17 @@ L.Control.Measure = L.Control.extend({
 		if (this._measuring) {
 			L.DomUtil.addClass(this._container, 'leaflet-control-measure-on')
 			this._startMeasuring()
-		} else {
+		} else if (gpx) {
 			var filename = prompt('Give the filename to store the GPX file');
-			var gpx = togpx(this._layerPaint.toGeoJSON());
-			var blob = new Blob([gpx], { type: "text/plain;charset=utf-8" });
-            saveAs(blob, filename + ".gpx");
+			if (filename != null){
+				var gpx_file = togpx(this._layerPaint.toGeoJSON());
+				var blob = new Blob([gpx_file], { type: "text/plain;charset=utf-8" });
+            	saveAs(blob, filename + ".gpx");
+			}
 			L.DomUtil.removeClass(this._container, 'leaflet-control-measure-on')
+			this._stopMeasuring()
+		}
+		else {
 			this._stopMeasuring()
 		}
 	},
