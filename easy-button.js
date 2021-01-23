@@ -173,6 +173,7 @@
 						this.button.setAttribute('type', 'button');
 						this.button.style.backgroundColor = 'white';
 						this.button.style.border = 'none';
+						this.button.style.fontSize = '20px';
 					}
 
 					if (this.options.id ){
