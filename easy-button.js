@@ -344,6 +344,9 @@
 
 				// build the wrapper
 				this.icon = L.DomUtil.create('span', '');
+				this.icon.style.display = 'flex';
+				this.icon.style.justifyContent = 'center';
+				this.icon.style.alignItems = 'center';
 				
 				L.DomUtil.addClass(this.icon, 'button-state state-' + this.stateName.replace(/(^\s*|\s*$)/g,''));
 				this.icon.innerHTML = buildIcon(template.icon);
@@ -365,7 +368,10 @@
 					// it's a class list, figure out what kind
 				} else {
 					ambiguousIconString = ambiguousIconString.replace(/(^\s*|\s*$)/g,'');
-					tmpIcon = L.DomUtil.create('span', '');					
+					tmpIcon = L.DomUtil.create('span', '');
+					this.icon.style.display = 'flex';
+					this.icon.style.justifyContent = 'center';
+					this.icon.style.alignItems = 'center';					
 
 					if( ambiguousIconString.indexOf('fa-') === 0 ){
 						L.DomUtil.addClass(tmpIcon, 'fa '  + ambiguousIconString)

@@ -4,7 +4,6 @@
 	<!-- set map CSS style -->
 	<style>
 		#map {
-			font-size:16px;
 			height:100%;
 			width:100vw;
 			padding:0px;
@@ -17,7 +16,7 @@
 		.blinking {
 			animation: fade 2s infinite alternate;
 		}
-		
+
 		.easybutton {
 			text-align: center;
 			vertical-align: middle;
@@ -143,7 +142,6 @@
 			
 			L.control.layers(tileLayers).addTo(map);
 			L.control.scale().addTo(map);
-			map.zoomControl.getContainer().style.fontSize = '16px';	
 			
 			measure_control = L.control.measure({
 				position: 'topleft',
