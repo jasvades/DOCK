@@ -276,7 +276,6 @@
 
 		
 		function onLocationError(e) {
-		    alert(e.message);
 		}
 		
 		
@@ -291,8 +290,7 @@
 						map.locate({
 							setView: false,
 							watch: true,
-							enableHighAccuracy: true,
-							timeout: 10000});  
+							enableHighAccuracy: true});  
 							btn.state('recalculate'); // change state on click!
 						}
 					},
