@@ -22,6 +22,10 @@
 			text-align: center;
 			vertical-align: middle;
 			opacity: 1;
+			padding-top: 0px;
+			padding-right: 0px;
+			padding-bottom: 0px;
+			padding-left: 0px;
 		}
 		
 		.tooltip{
@@ -490,7 +494,7 @@
 		
 		
 		function enableGPXupload(map) {
-			L.easyButton('<span class="path">&#10547;</span>', function(btn, map){ //https://www.htmlsymbols.xyz/arrow-symbols
+			L.easyButton('<span class="easybutton">&#10547;</span>', function(btn, map){ //https://www.htmlsymbols.xyz/arrow-symbols
 				var x = document.createElement("input");
 				x.setAttribute("type", "file");
 				x.setAttribute("accept", "gpx");
