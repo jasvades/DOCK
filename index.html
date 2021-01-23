@@ -261,6 +261,8 @@
 		        	.bindPopup("Je bent " + radius + " meter van dit punt").openPopup();
 
 		    	my_location_radius = L.circle(e.latlng, radius).addTo(map_ll);
+				map_ll.setZoom(16);
+				map_ll.setView(position);
 				location_on = true;
 		    }
 			else{
@@ -287,9 +289,8 @@
 					title:     'enable GPS tracking',
 					onClick: function(btn, map) {
 						map.locate({
-							setView: true,
+							setView: false,
 							watch: true,
-							maxZoom: 16,
 							enableHighAccuracy: true});  
 							btn.state('recalculate'); // change state on click!
 						}
