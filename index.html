@@ -39,7 +39,6 @@
 		.leaflet-bar button {
 		  background-position: 50% 50%;
 		  background-repeat: no-repeat;
-		  overflow: hidden;
 		  display: block;
 		}
 
@@ -161,7 +160,7 @@
 		
 		<!-- alert script errors -->
 		window.onerror=function(msg, url, linenumber){
-			//alert('Error message: '+msg+'\nURL: '+url+'\nLine Number: '+linenumber)
+			alert('Error message: '+msg+'\nURL: '+url+'\nLine Number: '+linenumber)
 			return true
 		}
 		
@@ -236,11 +235,11 @@
 				}	
 			});
 			
-			if (popup.isOpen() && event.type === 'click'){
+			if (popup.isOpen() && event.type === 'mousedown'){
 				popup.remove();
 				popupOpen = true;	
 			}
-			else if (! popupOpen && event.type === 'click'){
+			else if (! popupOpen && event.type === 'mousedown'){
 				popup
 				.setLatLng(event.latlng)
 				.setContent("De coördinaten van dit punt zijn: " + event.latlng.toString().substring(6))
