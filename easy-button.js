@@ -174,10 +174,8 @@
 						this.button.style.backgroundColor = 'white';
 						this.button.style.border = 'none';
 						this.button.style.fontSize = '18px';
-						this.button.style.height = 'auto';
-						this.button.style.width = 'auto';
-						this.button.style.minWidth = '26px';
-						this.button.style.minHeight = '26px';
+						this.button.style.height = '26px';
+						this.button.style.width = '26px';
 					}
 
 					if (this.options.id ){
