@@ -265,7 +265,9 @@
 		    }
 			else{
 			    my_location = L.marker(e.latlng).update(my_location);
-		    	my_location_radius = L.circle(e.latlng, radius).update(my_location_radius);
+		    	my_location_radius
+				.setLatLng(e.latlng)
+				.setRadius(radius);
 			}
 		}
 
