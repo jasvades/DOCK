@@ -341,6 +341,9 @@
 
 				// build the wrapper
 				this.icon = L.DomUtil.create('span', '');
+				this.icon.style.display = 'flex';
+				this.icon.style.justifyContent = 'center';
+				this.icon.style.alignItems = 'center';	
 				
 				L.DomUtil.addClass(this.icon, 'button-state state-' + this.stateName.replace(/(^\s*|\s*$)/g,''));
 				this.icon.innerHTML = buildIcon(template.icon);
