@@ -235,11 +235,11 @@
 				}	
 			});
 			
-			if (popup.isOpen() && event.type === 'mousedown' && (screen.width >= 480)){
+			if (popup.isOpen() && event.type === 'mousedown' && !(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent))){
 				popup.remove();
 				popupOpen = true;	
 			}
-			else if (! popupOpen && event.type === 'mousedown' && (screen.width >= 480)){
+			else if (! popupOpen && event.type === 'mousedown' && !(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent))){
 				popup
 				.setLatLng(event.latlng)
 				.setContent("De coördinaten van dit punt zijn: " + event.latlng.toString().substring(6))
