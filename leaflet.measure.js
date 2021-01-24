@@ -31,7 +31,7 @@ L.Control.Measure = L.Control.extend({
 		var container = L.DomUtil.create('div', className)
 		container.setAttribute('tooltip', 'Measure tool in km unit supporting multi-segment')
 		container.removeAttribute('title')
-		this._createButton('&#8674;', 'Measure',
+		this._createButton('<span class="easybutton">&#8596;</span>', 'Measure',
 		'leaflet-control-measure leaflet-bar-part leaflet-bar-part-top-and-bottom',
 		container, this._toggleMeasure, this)
 
@@ -59,6 +59,8 @@ L.Control.Measure = L.Control.extend({
 		.on(link, 'click', L.DomEvent.preventDefault)
 		.on(link, 'click', fn, context)
 		.on(link, 'dbclick', L.DomEvent.stopPropagation)
+		.on(link, 'mousedown', L.DomEvent.stop)
+		.on(link, 'mouseup', L.DomEvent.stop);
 		return link
 	},
 

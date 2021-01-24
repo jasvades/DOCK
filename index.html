@@ -20,6 +20,7 @@
 		.easybutton {
 			opacity: 1;
 			padding: 0;
+			font-size: 18;
 		}
 		
 		.leaflet-bar button,
@@ -154,7 +155,7 @@
 
 	<!-- load jQuery -->
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-
+	
 	<!-- load supporting functions -->    
 	<script>
 		
@@ -184,8 +185,8 @@
 				tileLayers[Object.keys(tileURLs)[tile_key]] = L.tileLayer(tileURLs[Object.keys(tileURLs)[tile_key]], {
 					attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>' + 'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
 					accessToken: 'pk.eyJ1IjoiZHJvcHBpbmdjaGlrYSIsImEiOiJja2dkdXQ4aTQwbXBqMnJsZXNsNTRqdG53In0.H_xtqAmm1KwWN_vQA7Vb-g',
-					maxNativeZoom:50,
-					maxZoom:50
+					maxNativeZoom:19,
+					maxZoom:19
 				});
 			}
 
