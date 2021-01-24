@@ -161,6 +161,9 @@
 		
 		<!-- alert script errors -->
 		window.onerror=function(msg, url, linenumber){
+			if(!(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent))){
+				alert('Error message: '+msg+'\nURL: '+url+'\nLine Number: '+linenumber)
+			}
 			return true
 		}
 		
@@ -278,6 +281,7 @@
 
 		
 		function onLocationError(e) {
+			alert(e.message);
 		}
 		
 		
