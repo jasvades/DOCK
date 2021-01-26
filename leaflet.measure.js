@@ -96,7 +96,9 @@ L.Control.Measure = L.Control.extend({
 		.on(this._map, 'mousemove', this._mouseMove, this)
 		.on(this._map, 'click', this._mouseClick, this)
 		.on(this._map, 'dbclick', this._finishPath, this)
-
+		.on(this._map, 'mousedown', L.DomEvent.stop, this)
+		.on(this._map, 'touchstart', L.DomEvent.stop, this)
+		
 		if (!this._layerPaint) {
 			this._layerPaint = L.layerGroup().addTo(this._map)
 		}
@@ -113,6 +115,8 @@ L.Control.Measure = L.Control.extend({
 		.off(this._map, 'mousemove', this._mouseMove, this)
 		.off(this._map, 'click', this._mouseClick, this)
 		.off(this._map, 'dbclick', this._finishPath, this)
+		.off(this._map, 'mousedown', L.DomEvent.stop, this)
+		.off(this._map, 'touchstart', L.DomEvent.stop, this)
 
 		if (this._doubleClickZoom) {
 			this._map.doubleClickZoom.enabled()
