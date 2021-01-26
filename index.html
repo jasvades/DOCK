@@ -263,7 +263,7 @@
 			position = e.latlng;
 		    if(!location_on){
 				my_location = L.marker(e.latlng).addTo(map_ll)
-		        	.bindPopup("Je bent maximaal " + radius + " meter van dit punt").openPopup();
+		        	.bindPopup("Je bent maximaal " + Math.round(radius) + " meter van dit punt").openPopup();
 
 		    	my_location_radius = L.circle(e.latlng, radius).addTo(map_ll);
 				map_ll.setZoom(16);
