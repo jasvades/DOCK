@@ -251,6 +251,12 @@
 				.setContent("De coördinaten van dit punt zijn: " + event.latlng.toString().substring(6))
 				.openOn(this);
 			}
+			else if (! popupOpen && event.type === 'contextmenu' && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent))){
+				popup
+				.setLatLng(event.latlng)
+				.setContent("De coördinaten van dit punt zijn: " + event.latlng.toString().substring(6))
+				.openOn(this);
+			}
 		}
 		
 		
@@ -291,7 +297,7 @@
 				states: [{
 					stateName: 'enable',
 					icon:      '<span class="easybutton"><ion-icon size="small" name="navigate-outline"></ion-icon></span>',
-					title:     'enable GPS tracking',
+					title:     'enable GPS location',
 					onClick: function(btn, map) {
 						map.locate({
 							setView: false,
@@ -615,7 +621,7 @@
 
 		<script>				
 			var map_ll = initialiseMap();
-			map_ll.on('click dblclick mousedown zoomanim', onMapClick);
+			map_ll.on('click dblclick mousedown zoomanim contextmenu', onMapClick);
 			map_ll.on('locationfound', onLocationFound);
 			map_ll.on('locationerror', onLocationError);
 			
@@ -629,12 +635,8 @@
 				'https://dl.dropbox.com/s/ywnm12r44ig9k3w/mystery%20route.gpx?dl=0'
 			];
 							
-			//loadSheetsOnce(map_ll);
+			//loadSheetsOnce(map_ll, <sheetsID>, <googleAPIkey>);
 			loadSheetsRealtime_button(map_ll);
-			
-						
-			<!-- disable right click -->
-			document.oncontextmenu = document.body.oncontextmenu = function() {return false;}
 		</script>				
 	</body>
 </html>
