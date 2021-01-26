@@ -95,6 +95,7 @@ L.Control.Measure = L.Control.extend({
 		L.DomEvent
 		.on(this._map, 'mousemove', this._mouseMove, this)
 		.on(this._map, 'click', this._mouseClick, this)
+		.on(this._map, 'touchstart', L.DomEvent.stop, this)
 		.on(this._map, 'dbclick', this._finishPath, this)
 
 		if (!this._layerPaint) {
