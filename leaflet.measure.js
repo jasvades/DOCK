@@ -208,7 +208,7 @@ L.Control.Measure = L.Control.extend({
 	},
 
 	_finishPath: function (e) {
-		if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent) {
+		if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
 			return;
 		}
 		if (e) {
