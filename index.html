@@ -241,17 +241,18 @@
 				}	
 			});
 			
-			if (popup.isOpen() && event.type === 'mousedown' && !(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent))){
+			if (popup.isOpen() && event.type === 'mousedown'){
 				popup.remove();
 				popupOpen = true;	
 			}
-			else if (! popupOpen && event.type === 'mousedown' && !(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent))){
+			else if (! popupOpen && event.type === 'mousedown' && ! (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent))){
 				popup
 				.setLatLng(event.latlng)
 				.setContent("De coördinaten van dit punt zijn: " + event.latlng.toString().substring(6))
 				.openOn(this);
 			}
 			else if (! popupOpen && event.type === 'contextmenu' && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent))){
+				event.preventDefault;
 				popup
 				.setLatLng(event.latlng)
 				.setContent("De coördinaten van dit punt zijn: " + event.latlng.toString().substring(6))
