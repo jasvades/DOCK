@@ -190,6 +190,7 @@
 					L.DomEvent.addListener(this.button, 'mouseover', function(e){this.style.backgroundColor = 'WhiteSmoke';});
 					L.DomEvent.addListener(this.button, 'mouseout', function(e){this.style.backgroundColor = 'white';});
 					L.DomEvent.addListener(this.button, 'mouseup', L.DomEvent.stop);
+					L.DomEvent.addListener(this.button, 'touchstart', L.DomEvent.stop);
 
 					// take care of normal clicks
 					L.DomEvent.addListener(this.button,'click', function(e){

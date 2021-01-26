@@ -60,6 +60,7 @@ L.Control.Measure = L.Control.extend({
 		.on(link, 'click', fn, context)
 		.on(link, 'dbclick', L.DomEvent.stopPropagation)
 		.on(link, 'mousedown', L.DomEvent.stop)
+		.on(link, 'touchstart', L.DomEvent.stop)
 		.on(link, 'mouseup', L.DomEvent.stop);
 		return link
 	},
