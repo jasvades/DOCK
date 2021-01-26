@@ -638,6 +638,9 @@
 							
 			//loadSheetsOnce(map_ll, <sheetsID>, <googleAPIkey>);
 			loadSheetsRealtime_button(map_ll);
+			
+			<!-- disable text selection -->
+			window.addEventListener('selectstart', function(e){ e.preventDefault(); });
 		</script>				
 	</body>
 </html>
