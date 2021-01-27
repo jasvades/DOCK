@@ -8,7 +8,6 @@
 			width:100vw;
 			padding:0px;
 			margin:0px;
-			-webkit-touch-callout: none;
 		}
 		@keyframes fade { 
 			from { opacity: 0.25; } 
@@ -626,6 +625,14 @@
 			map_ll.on('click dblclick mousedown zoomanim contextmenu', onMapClick);
 			map_ll.on('locationfound', onLocationFound);
 			map_ll.on('locationerror', onLocationError);
+			
+			if(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)){
+				document.getElementById("map")
+				.style.setProperty('-webkit-touch-callout', 'none')
+				.style.setProperty('-webkit-user-select', 'none')
+				.style.setProperty('-ms-user-select', 'none')
+				.style.setProperty('user-select', 'none')
+			}
 			
 			enableLocationTracking(map_ll);
 			enableGPXupload(map_ll);
