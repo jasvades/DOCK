@@ -627,11 +627,11 @@
 			map_ll.on('locationerror', onLocationError);
 			
 			if(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)){
-				document.getElementById("map")
-				.style.setProperty('-webkit-touch-callout', 'none')
-				.style.setProperty('-webkit-user-select', 'none')
-				.style.setProperty('-ms-user-select', 'none')
-				.style.setProperty('user-select', 'none')
+				map_div = document.getElementById("map")
+				map_div.style.setProperty('-webkit-touch-callout', 'none');
+				map_div.style.setProperty('-webkit-user-select', 'none');
+				map_div.style.setProperty('-ms-user-select', 'none');
+				map_div.style.setProperty('user-select', 'none');
 			}
 			
 			enableLocationTracking(map_ll);
