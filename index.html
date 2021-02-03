@@ -128,6 +128,13 @@
 			opacity: 1;
 			bottom: 14px;
 		}
+		
+		.dot {
+		  height: 1em;
+		  width: 1em;
+		  border-radius: 50%;
+		  display: inline-block;
+		}
 		</style>
 
 	<!-- ensure mobile compatibility -->	
@@ -541,6 +548,7 @@
 				
 				var GPXtext = e.target.result;
 
+				color = "#"+((1<<24)*Math.random()|0).toString(16);
 				gpx = new L.GPX(GPXtext, {
 					async: true,
 					marker_options: {
@@ -551,7 +559,7 @@
 					},
 					polyline_options: {
 						opacity: 0.7,
-						color : "#"+((1<<24)*Math.random()|0).toString(16),
+						color : color,
 						weight: 5,
 						lineCap: 'round'
 					} })
@@ -561,7 +569,7 @@
 					.addTo(map_ll);
 					
 					GPXgroup.addLayer(gpx);
-					GPXcontrol.addOverlay(gpx, e.target.fileName);
+					GPXcontrol.addOverlay(gpx, e.target.fileName + ' <span class="dot" style="background-color:' + color + ';"></span>');
 				}
 		}
 		
