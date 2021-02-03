@@ -233,7 +233,7 @@
 			idleTime = today.getTime();
 			
 			map_ll.eachLayer(function(layer) {
-			    if(layer instanceof L.Marker) {
+				if(layer instanceof L.Marker) {
 					if(layer.isPopupOpen()){
 						layer.closePopup();
 						popupOpen = true;
@@ -265,22 +265,22 @@
 		var my_location;
 		var my_location_radius;						
 		function onLocationFound(e) {
-		    var radius = e.accuracy;
+			var radius = e.accuracy;
 			
 			position = e.latlng;
-		    if(!location_on){
+			if(!location_on){
 				my_location = L.marker(e.latlng).addTo(map_ll)
-		        	.bindPopup("Je bent maximaal " + Math.round(radius) + " meter van dit punt").openPopup();
+				.bindPopup("Je bent maximaal " + Math.round(radius) + " meter van dit punt").openPopup();
 
-		    	my_location_radius = L.circle(e.latlng, radius).addTo(map_ll);
+				my_location_radius = L.circle(e.latlng, radius).addTo(map_ll);
 				map_ll.setZoom(16);
 				map_ll.setView(position);
 				location_on = true;
-		    }
+			}
 			else{
-			    my_location
+				my_location
 				.setLatLng(e.latlng);
-		    	my_location_radius
+				my_location_radius
 				.setLatLng(e.latlng)
 				.setRadius(radius);
 			}
@@ -304,7 +304,7 @@
 							setView: false,
 							watch: true,
 							enableHighAccuracy: true});  
-							btn.state('recalculate'); // change state on click!
+						btn.state('recalculate'); // change state on click!
 						}
 					},
 					{
@@ -506,6 +506,7 @@
 		}
 		
 		var GPXgroup = new L.featureGroup;
+		var GPXcontrol = new L.control.layers(new Array(),null, {collapsed:false});
 		
 		function loadFiles() {
 			var input, file, fr;
@@ -526,18 +527,14 @@
 				alert("Please select a file before clicking 'Load'");
 			}
 			else {
+				GPXcontrol.addTo(map_ll);
 				for(var i = 0; i < input.files.length; i++){
 					file = input.files[i];
 					fr = new FileReader();
 					fr.onload = pushToMap;
+					fr.fileName = file.name.split('.').slice(0, -1).join('.');
 					fr.readAsText(file);
 				}
-			}
-
-			function testXML(e){								
-				parser = new DOMParser();
-				xml = parser.parseFromString(e.target.result,"text/xml");
-				alert(xml.getElementsByTagName('name')[0].childNodes[0].nodeValue);
 			}
 			
 			function pushToMap(e){
@@ -564,6 +561,7 @@
 					.addTo(map_ll);
 					
 					GPXgroup.addLayer(gpx);
+					GPXcontrol.addOverlay(gpx, e.target.fileName);
 				}
 		}
 		
@@ -581,39 +579,7 @@
 				$('#fileinput').trigger('click');
 			}, 'import GPX routes').addTo( map_ll );
 		}
-		
-		function loadGPXroutesUrls(map, fileUrls) {
 
-			colors = [
-				'green',
-				'red',
-				'blue',
-				'orange',
-				'purple'
-			];
-
-			for (var i = 0; i < fileUrls.length; i++) {
-				gpx = new L.GPX(fileUrls[i], {
-					async: true,
-					marker_options: {
-					    startIconUrl: '',
-					    endIconUrl: '',
-					    shadowUrl: ''
-					},
-					polyline_options: {
-						opacity: 0.5,
-						color : colors[i],
-						weight: 5,
-						lineCap: 'round'
-					} })
-					.on('loaded', function(e) {
-						map.fitBounds(GPXgroup.getBounds());
-					})
-					.addTo(map);
-					
-				GPXgroup.addLayer(gpx);
-			}
-		}
 
 		</script>
 	</head>
@@ -638,14 +604,7 @@
 			enableGPXupload(map_ll);
 			
 			loadSheetsRealtime_button(map_ll);
-			//loadSheetsOnce(map_ll, <sheetsID>, <googleAPIkey>);
-			
-			//var fileUrls = [
-			//	'https://dl.dropbox.com/s/nj9le88mfcttbgp/adventure%20route.gpx?dl=0',
-			//	'https://dl.dropbox.com/s/b7s10x5zq2d1e33/hardcore%20route.gpx?dl=0',
-			//	'https://dl.dropbox.com/s/ywnm12r44ig9k3w/mystery%20route.gpx?dl=0'
-			//];
-			//loadGPXroutesUrls(map_ll, fileUrls);		
+			//loadSheetsOnce(map_ll, <sheetsID>, <googleAPIkey>);		
 			
 		</script>				
 	</body>
