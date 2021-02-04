@@ -298,7 +298,6 @@
 		}
 		
 		
-		var location_on = false;
 		function enableLocationTracking(map){
 			L.easyButton({
 				states: [{
@@ -311,8 +310,7 @@
 							watch: true,
 							enableHighAccuracy: true});  
 						btn.state('recalculate'); // change state on click!
-						location_on = true;
-						}
+					}
 					},
 					{
 						stateName: 'recalculate',
@@ -327,33 +325,35 @@
 		
 		
 		var hist_locations = new L.featureGroup;
-		var hist_location_on = false;
+		var tracking_on = false;
 
 		function enableHistoryLocationTracking(map){
 			L.easyButton({
 				states: [{
 					stateName: 'enable',
 					icon:      '<span class="easybutton"><ion-icon size="small" name="navigate-outline"></ion-icon></span>',
-					title:     'enable GPS location',
+					title:     'enable GPS tracking',
 					onClick: function(btn, map) {
 						map.locate({
 							setView: false,
 							watch: true,
 							enableHighAccuracy: true});
 						btn.state('disable'); // change state on click!
-						hist_location_on = true;
-						hist_locations.addTo(map);  
-						}
+						tracking_on = true;
+					}
 					},
 					{
 						stateName: 'disable',
 						icon:      '<span class="easybutton"><ion-icon size="small" name="navigate"></ion-icon></span>',
-						title:     'click to recalculate position',
+						title:     'click to disable tracking and save track',
 						onClick: function(btn, map) {
 							btn.state('enable');
+							
 							map.stopLocate();
+							tracking_on = false;
 							map.removeLayer(my_location);
 							map.removeLayer(my_location_radius);
+							
 							var filename = prompt('Give the filename to store the GPX file');
 							if (filename != null){
 								var gpx_file = togpx(hist_locations.toGeoJSON());
