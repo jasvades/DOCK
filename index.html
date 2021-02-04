@@ -352,7 +352,7 @@
 		}
 		
 		
-		function loadSheetsRealtime_button(map){
+		function enableRealtimeLocationsSheets(map){
 			L.easyButton({
 				states: [{
 					stateName: 'enable',
@@ -610,8 +610,7 @@
 			
 			enableLocationTracking(map_ll);
 			enableGPXupload(map_ll);
-			
-			loadSheetsRealtime_button(map_ll);
+			enableRealtimeLocationsSheets(map_ll);
 			//loadSheetsOnce(map_ll, <sheetsID>, <googleAPIkey>);		
 			
 		</script>				
