@@ -353,6 +353,7 @@
 							tracking_on = false;
 							map.removeLayer(my_location);
 							map.removeLayer(my_location_radius);
+							my_location, my_location_radius = undefined;
 							
 							var filename = prompt('Give the filename to store the GPX file');
 							if (filename != null){
