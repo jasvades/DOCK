@@ -324,14 +324,14 @@
 			}
 		
 		
-		var hist_locations = new L.featureGroup;
+		var hist_locations = new L.layerGroup();
 		var tracking_on = false;
 
 		function enableHistoryLocationTracking(map){
 			L.easyButton({
 				states: [{
 					stateName: 'enable',
-					icon:      '<span class="easybutton"><ion-icon size="small" name="navigate-outline"></ion-icon></span>',
+					icon:      '<span class="easybutton">&#10561;</ion-icon></span>',
 					title:     'enable GPS tracking',
 					onClick: function(btn, map) {
 						map.locate({
@@ -344,7 +344,7 @@
 					},
 					{
 						stateName: 'disable',
-						icon:      '<span class="easybutton"><ion-icon size="small" name="navigate"></ion-icon></span>',
+						icon:      '<span class="easybutton"><ion-icon size="small" name="download"></ion-icon></span>',
 						title:     'click to disable tracking and save track',
 						onClick: function(btn, map) {
 							btn.state('enable');
