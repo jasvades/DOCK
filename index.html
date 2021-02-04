@@ -274,16 +274,16 @@
 			var radius = e.accuracy;
 			
 			position = e.latlng;
-			if(!location_on){
+			if(my_location === undefined){
 				my_location = L.marker(e.latlng).addTo(map)
 				.bindPopup("Je bent maximaal " + Math.round(radius) + " meter van dit punt").openPopup();
 
 				my_location_radius = L.circle(e.latlng, radius).addTo(map);
 				map.setZoom(16);
 				map.setView(position);
-				location_on = true;
 			}
 			else{
+				hist_locations.addLayer(new L.polyline([my_location.latlng, e.latlng]));
 				my_location
 				.setLatLng(e.latlng);
 				my_location_radius
@@ -311,6 +311,7 @@
 							watch: true,
 							enableHighAccuracy: true});  
 						btn.state('recalculate'); // change state on click!
+						location_on = true;
 						}
 					},
 					{
@@ -319,6 +320,46 @@
 						title:     'click to recalculate position',
 						onClick: function(btn, map) {
 							map.setView(position);
+						}
+					}]}
+				).addTo( map );
+			}
+		
+		
+		var hist_locations = new L.featureGroup;
+		var hist_location_on = false;
+
+		function enableHistoryLocationTracking(map){
+			L.easyButton({
+				states: [{
+					stateName: 'enable',
+					icon:      '<span class="easybutton"><ion-icon size="small" name="navigate-outline"></ion-icon></span>',
+					title:     'enable GPS location',
+					onClick: function(btn, map) {
+						map.locate({
+							setView: false,
+							watch: true,
+							enableHighAccuracy: true});
+						btn.state('disable'); // change state on click!
+						hist_location_on = true;
+						hist_locations.addTo(map);  
+						}
+					},
+					{
+						stateName: 'disable',
+						icon:      '<span class="easybutton"><ion-icon size="small" name="navigate"></ion-icon></span>',
+						title:     'click to recalculate position',
+						onClick: function(btn, map) {
+							btn.state('enable');
+							map.stopLocate();
+							map.removeLayer(my_location);
+							map.removeLayer(my_location_radius);
+							var filename = prompt('Give the filename to store the GPX file');
+							if (filename != null){
+								var gpx_file = togpx(hist_locations.toGeoJSON());
+								var blob = new Blob([gpx_file], { type: "text/plain;charset=utf-8" });
+				            	saveAs(blob, filename + ".gpx");
+							}
 						}
 					}]}
 				).addTo( map );
@@ -340,10 +381,10 @@
 				// formatDistance: function (val) {
 					//   return Math.round(1000 * val / 1609.344) / 1000 + 'mile';
 					// }
-				}).addTo(map)
+			}).addTo(map)
 		}		
 		
-		
+				
 		function loadSheetsOnce(map, sheetsUrl, googleApiKey) {
 			var locations = [];
 			
@@ -618,6 +659,7 @@
 			
 			enableMeasure(map);
 			enableLocationTracking(map);
+			enableHistoryLocationTracking(map);
 			enableGPXupload(map);
 			enableRealtimeLocationsSheets(map);
 			//loadSheetsOnce(map, <sheetsID>, <googleAPIkey>);		
