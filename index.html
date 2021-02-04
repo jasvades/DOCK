@@ -164,19 +164,32 @@
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 	
 	<!-- load supporting functions -->    
+	<div id="map"></div>
+	
 	<script>
+		var map;
+		var ismobile = (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
+		
+		<!-- set mobile settings -->
+		if(ismobile){
+			map_div = document.getElementById("map")
+			map_div.style.setProperty('-webkit-touch-callout', 'none');
+			map_div.style.setProperty('-webkit-user-select', 'none');
+			map_div.style.setProperty('-ms-user-select', 'none');
+			map_div.style.setProperty('user-select', 'none');
+		}
 		
 		<!-- alert script errors -->
 		window.onerror=function(msg, url, linenumber){
-			if(!(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent))){
+			if(! ismobile){
 				alert('Error message: '+msg+'\nURL: '+url+'\nLine Number: '+linenumber)
 			}
 			return true
 		}
 		
-		var measure_control;
+
 		var tileLayers;
-		
+				
 		function initialiseMap() {
 			var map = L.map('map', {closePopupOnClick: false, zoomControl: false}).fitWorld();
 			
@@ -209,20 +222,6 @@
 				width: '1.65em'
 			}).addTo(map);
 			
-			measure_control = L.control.measure({
-				position: 'topleft',
-				keyboard: true,	//  weather to use keyboard control for this plugin
-				activeKeyCode: 'M'.charCodeAt(0),	//  shortcut to activate measure
-				cancelKeyCode: 27,	//  shortcut to cancel measure, defaults to 'Esc'
-				lineColor: '#a8250d',
-				lineWeight: 2,
-				lineDashArray: '1, 0',
-				lineOpacity: 1,
-				// formatDistance: function (val) {
-					//   return Math.round(1000 * val / 1609.344) / 1000 + 'mile';
-					// }
-				}).addTo(map)
-			
 			return map;					
 		}
 
@@ -239,7 +238,7 @@
 			var today = new Date;
 			idleTime = today.getTime();
 			
-			map_ll.eachLayer(function(layer) {
+			map.eachLayer(function(layer) {
 				if(layer instanceof L.Marker) {
 					if(layer.isPopupOpen()){
 						layer.closePopup();
@@ -252,13 +251,13 @@
 				popup.remove();
 				popupOpen = true;	
 			}
-			else if (! popupOpen && event.type === 'mousedown' && ! (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent))){
+			else if (! popupOpen && event.type === 'mousedown' && ! ismobile){
 				popup
 				.setLatLng(event.latlng)
 				.setContent("De coördinaten van dit punt zijn: " + event.latlng.toString().substring(6))
 				.openOn(this);
 			}
-			else if (! popupOpen && event.type === 'contextmenu' && (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent))){
+			else if (! popupOpen && event.type === 'contextmenu' && ismobile){
 				event.preventDefault;
 				popup
 				.setLatLng(event.latlng)
@@ -276,12 +275,12 @@
 			
 			position = e.latlng;
 			if(!location_on){
-				my_location = L.marker(e.latlng).addTo(map_ll)
+				my_location = L.marker(e.latlng).addTo(map)
 				.bindPopup("Je bent maximaal " + Math.round(radius) + " meter van dit punt").openPopup();
 
-				my_location_radius = L.circle(e.latlng, radius).addTo(map_ll);
-				map_ll.setZoom(16);
-				map_ll.setView(position);
+				my_location_radius = L.circle(e.latlng, radius).addTo(map);
+				map.setZoom(16);
+				map.setView(position);
 				location_on = true;
 			}
 			else{
@@ -324,6 +323,25 @@
 					}]}
 				).addTo( map );
 			}
+		
+		
+		var measure_control;
+		
+		function enableMeasure(map){
+			measure_control = L.control.measure({
+				position: 'topleft',
+				keyboard: true,	//  weather to use keyboard control for this plugin
+				activeKeyCode: 'M'.charCodeAt(0),	//  shortcut to activate measure
+				cancelKeyCode: 27,	//  shortcut to cancel measure, defaults to 'Esc'
+				lineColor: '#a8250d',
+				lineWeight: 2,
+				lineDashArray: '1, 0',
+				lineOpacity: 1,
+				// formatDistance: function (val) {
+					//   return Math.round(1000 * val / 1609.344) / 1000 + 'mile';
+					// }
+				}).addTo(map)
+		}		
 		
 		
 		function loadSheetsOnce(map, sheetsUrl, googleApiKey) {
@@ -448,12 +466,12 @@
 			}).addTo(map);
 			
 			var tochtGroepen = new Array();
-			var tochtControl = new L.control.layers(tochtGroepen,null, {collapsed:false}).addTo(map_ll);
+			var tochtControl = new L.control.layers(tochtGroepen,null, {collapsed:false}).addTo(map);
 			
 			realtime.on('update', function() {
 				var bounds;						
 				
-				tochtControl.remove(map_ll);
+				tochtControl.remove(map);
 								
 				for (var key in realtime._features) {
 					feature = realtime._features[key];
@@ -472,7 +490,7 @@
 					tochtControl.addOverlay(tochtGroepen[key], key);
 				}
 				
-				tochtControl.addTo(map_ll);
+				tochtControl.addTo(map);
 											
 				bounds = GPXgroup.getBounds();
 				bounds.extend(realTimeGroup.getBounds());
@@ -480,7 +498,7 @@
 				var today = new Date;
 				var now = today.getTime();
 				if(now - idleTime > 10000){
-					map_ll.fitBounds(bounds);
+					map.fitBounds(bounds);
 				}
 			});
 			
@@ -534,7 +552,7 @@
 				alert("Please select a file before clicking 'Load'");
 			}
 			else {
-				GPXcontrol.addTo(map_ll);
+				GPXcontrol.addTo(map);
 				for(var i = 0; i < input.files.length; i++){
 					file = input.files[i];
 					fr = new FileReader();
@@ -564,9 +582,9 @@
 						lineCap: 'round'
 					} })
 					.on('loaded', function(e) {
-						map_ll.fitBounds(GPXgroup.getBounds());
+						map.fitBounds(GPXgroup.getBounds());
 					})
-					.addTo(map_ll);
+					.addTo(map);
 					
 					GPXgroup.addLayer(gpx);
 					GPXcontrol.addOverlay(gpx, e.target.fileName + ' <span class="dot" style="background-color:' + color + ';"></span>');
@@ -585,33 +603,24 @@
 				x.setAttribute("oninput", "loadFiles();");
 				document.body.appendChild(x);  
 				$('#fileinput').trigger('click');
-			}, 'import GPX routes').addTo( map_ll );
+			}, 'import GPX routes').addTo( map );
 		}
 
 
 		</script>
 	</head>
 	<body>
-		<div id="map"></div>
-
 		<script>				
-			var map_ll = initialiseMap();
-			map_ll.on('click dblclick mousedown zoomanim contextmenu', onMapClick);
-			map_ll.on('locationfound', onLocationFound);
-			map_ll.on('locationerror', onLocationError);
+			map = initialiseMap();
+			map.on('click dblclick mousedown zoomanim contextmenu', onMapClick);
+			map.on('locationfound', onLocationFound);
+			map.on('locationerror', onLocationError);
 			
-			if(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)){
-				map_div = document.getElementById("map")
-				map_div.style.setProperty('-webkit-touch-callout', 'none');
-				map_div.style.setProperty('-webkit-user-select', 'none');
-				map_div.style.setProperty('-ms-user-select', 'none');
-				map_div.style.setProperty('user-select', 'none');
-			}
-			
-			enableLocationTracking(map_ll);
-			enableGPXupload(map_ll);
-			enableRealtimeLocationsSheets(map_ll);
-			//loadSheetsOnce(map_ll, <sheetsID>, <googleAPIkey>);		
+			enableMeasure(map);
+			enableLocationTracking(map);
+			enableGPXupload(map);
+			enableRealtimeLocationsSheets(map);
+			//loadSheetsOnce(map, <sheetsID>, <googleAPIkey>);		
 			
 		</script>				
 	</body>
