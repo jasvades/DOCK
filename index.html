@@ -364,7 +364,8 @@
 									saveAs(blob, filename + ".gpx");
 				            	}
 								else {
-				            		var fileURL = URL.createObjectURL(blob);
+				            		alert(gpx_file);
+									var fileURL = URL.createObjectURL(blob);
 									window.open(fileURL);
 								}
 							}
