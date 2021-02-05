@@ -353,12 +353,13 @@
 							tracking_on = false;
 							map.removeLayer(my_location);
 							map.removeLayer(my_location_radius);
-							my_location, my_location_radius = undefined;
+							my_location = undefined;
+							my_location_radius = undefined;
 							
 							var filename = prompt('Give the filename to store the GPX file');
 							if (filename != null){
 								var gpx_file = togpx(hist_locations.toGeoJSON());
-								var blob = new Blob([gpx_file], { type: "application/pdf" });
+								var blob = new Blob([gpx_file], { type: "text/plain;charset=utf-8" });
 				            	saveAs(blob, filename + ".gpx");
 							}
 						}
