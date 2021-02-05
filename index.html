@@ -181,7 +181,7 @@
 		
 		<!-- alert script errors -->
 		window.onerror=function(msg, url, linenumber){
-			if( isMobile){
+			if(! isMobile){
 				alert('Error message: '+msg+'\nURL: '+url+'\nLine Number: '+linenumber)
 			}
 			return true
@@ -361,7 +361,6 @@
 								var gpx_file = togpx(hist_locations.toGeoJSON());
 								var blob = new Blob([gpx_file], { type: "text/plain;charset=utf-8" });
 				            	if(! isMobile){
-									alert('not mobile');
 									saveAs(blob, filename + ".gpx");
 				            	}
 								else {
