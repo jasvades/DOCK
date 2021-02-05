@@ -168,10 +168,10 @@
 	
 	<script>
 		var map;
-		var ismobile = (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
+		var isMobile = (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
 		
 		<!-- set mobile settings -->
-		if(ismobile){
+		if(isMobile){
 			map_div = document.getElementById("map")
 			map_div.style.setProperty('-webkit-touch-callout', 'none');
 			map_div.style.setProperty('-webkit-user-select', 'none');
@@ -181,7 +181,7 @@
 		
 		<!-- alert script errors -->
 		window.onerror=function(msg, url, linenumber){
-			if(! ismobile){
+			if(! isMobile){
 				alert('Error message: '+msg+'\nURL: '+url+'\nLine Number: '+linenumber)
 			}
 			return true
@@ -251,13 +251,13 @@
 				popup.remove();
 				popupOpen = true;	
 			}
-			else if (! popupOpen && event.type === 'mousedown' && ! ismobile){
+			else if (! popupOpen && event.type === 'mousedown' && ! isMobile){
 				popup
 				.setLatLng(event.latlng)
 				.setContent("De coördinaten van dit punt zijn: " + event.latlng.toString().substring(6))
 				.openOn(this);
 			}
-			else if (! popupOpen && event.type === 'contextmenu' && ismobile){
+			else if (! popupOpen && event.type === 'contextmenu' && isMobile){
 				event.preventDefault;
 				popup
 				.setLatLng(event.latlng)
