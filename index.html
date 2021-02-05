@@ -358,7 +358,7 @@
 							var filename = prompt('Give the filename to store the GPX file');
 							if (filename != null){
 								var gpx_file = togpx(hist_locations.toGeoJSON());
-								var blob = new Blob([gpx_file], { type: "text/plain;charset=utf-8" });
+								var blob = new Blob([gpx_file], { type: "application/pdf" });
 				            	saveAs(blob, filename + ".gpx");
 							}
 						}
