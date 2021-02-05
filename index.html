@@ -360,7 +360,7 @@
 							if (filename != null){
 								var gpx_file = togpx(hist_locations.toGeoJSON());
 								var blob = new Blob([gpx_file], { type: "text/plain;charset=utf-8" });
-				            	if(! isMobile){
+				            	if(! (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent))){
 									saveAs(blob, filename + ".gpx");
 				            	}
 								else {
