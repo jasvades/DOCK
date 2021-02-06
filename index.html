@@ -283,7 +283,9 @@
 				map.setView(position);
 			}
 			else{
-				hist_locations.addLayer(new L.polyline([my_location.getLatLng(), e.latlng]));
+				if(radius < 50 && my_location_radius < 50){
+					hist_locations.addLayer(new L.polyline([my_location.getLatLng(), e.latlng]));
+				}
 				my_location
 				.setLatLng(e.latlng);
 				my_location_radius
@@ -309,13 +311,13 @@
 							setView: false,
 							watch: true,
 							enableHighAccuracy: true});  
-						btn.state('recalculate'); // change state on click!
+						btn.state('relocate'); // change state on click!
 					}
 					},
 					{
-						stateName: 'recalculate',
+						stateName: 'relocate',
 						icon:      '<span class="easybutton"><ion-icon size="small" name="navigate"></ion-icon></span>',
-						title:     'click to recalculate position',
+						title:     'click to relocate current position',
 						onClick: function(btn, map) {
 							map.setView(position);
 						}
@@ -325,8 +327,6 @@
 		
 		
 		var hist_locations = new L.layerGroup();
-		var tracking_on = false;
-
 		function enableHistoryLocationTracking(map){
 			L.easyButton({
 				states: [{
@@ -339,7 +339,6 @@
 							watch: true,
 							enableHighAccuracy: true});
 						btn.state('disable'); // change state on click!
-						tracking_on = true;
 					}
 					},
 					{
@@ -350,19 +349,12 @@
 							btn.state('enable');
 							
 							map.stopLocate();
-							tracking_on = false;
 														
 							var filename = prompt('Give the filename to store the GPX file');
 							if (filename != null){
 								var gpx_file = togpx(hist_locations.toGeoJSON());
 								var blob = new Blob([gpx_file], { type: "text/plain;charset=utf-8" });
-				            	//if(! isMobile){
-									saveAs(blob, filename + ".gpx");
-									//}
-								//else {
-								//	var fileURL = URL.createObjectURL(blob);
-								//	window.open(fileURL);
-								//}
+								saveAs(blob, filename + ".gpx");
 							}
 							map.removeLayer(my_location);
 							map.removeLayer(my_location_radius);
