@@ -287,7 +287,7 @@
 					hist_locations.addLayer(new L.polyline([my_location.getLatLng(), e.latlng]));
 				}
 				my_location
-				.setLatLng(e.latlng);
+				.setLatLng(e.latlng)
 				.bindPopup("Je bent maximaal " + Math.round(radius) + " meter van dit punt").openPopup();
 				
 				my_location_radius
