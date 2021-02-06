@@ -344,28 +344,25 @@
 					},
 					{
 						stateName: 'disable',
-						icon:      '<span class="easybutton"><ion-icon size="small" name="arrow"></ion-icon></span>',
+						icon:      '<span class="easybutton"><ion-icon size="small" name="download"></ion-icon></span>',
 						title:     'click to disable tracking and save track',
 						onClick: function(btn, map) {
 							btn.state('enable');
 							
 							map.stopLocate();
 							tracking_on = false;
-							
-							alert(togpx(hist_locations.toGeoJSON()));
-							
+														
 							var filename = prompt('Give the filename to store the GPX file');
 							if (filename != null){
 								var gpx_file = togpx(hist_locations.toGeoJSON());
 								var blob = new Blob([gpx_file], { type: "text/plain;charset=utf-8" });
-				            	if(! isMobile){
+				            	//if(! isMobile){
 									saveAs(blob, filename + ".gpx");
-				            	}
-								else {
-				            		alert(gpx_file);
-									var fileURL = URL.createObjectURL(blob);
-									window.open(fileURL);
-								}
+									//}
+								//else {
+								//	var fileURL = URL.createObjectURL(blob);
+								//	window.open(fileURL);
+								//}
 							}
 							map.removeLayer(my_location);
 							map.removeLayer(my_location_radius);
