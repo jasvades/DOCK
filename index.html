@@ -283,7 +283,7 @@
 				map.setView(position);
 			}
 			else{
-				hist_locations.addLayer(new L.polyline([my_location.latlng, e.latlng]));
+				hist_locations.addLayer(new L.polyline([my_location.getLatLng(), e.latlng]));
 				my_location
 				.setLatLng(e.latlng);
 				my_location_radius
@@ -344,17 +344,15 @@
 					},
 					{
 						stateName: 'disable',
-						icon:      '<span class="easybutton"><ion-icon size="small" name="download"></ion-icon></span>',
+						icon:      '<span class="easybutton"><ion-icon size="small" name="arrow"></ion-icon></span>',
 						title:     'click to disable tracking and save track',
 						onClick: function(btn, map) {
 							btn.state('enable');
 							
 							map.stopLocate();
 							tracking_on = false;
-							map.removeLayer(my_location);
-							map.removeLayer(my_location_radius);
-							my_location = undefined;
-							my_location_radius = undefined;
+							
+							alert(togpx(hist_locations.toGeoJSON()));
 							
 							var filename = prompt('Give the filename to store the GPX file');
 							if (filename != null){
@@ -369,6 +367,11 @@
 									window.open(fileURL);
 								}
 							}
+							map.removeLayer(my_location);
+							map.removeLayer(my_location_radius);
+							
+							my_location = undefined;
+							my_location_radius = undefined;
 						}
 					}]}
 				).addTo( map );
