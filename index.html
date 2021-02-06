@@ -285,9 +285,11 @@
 			}
 			else{
 				if(last_stored_position === undefined && radius < 100.0){
+					alert('store last');
 					last_stored_position = my_location;
 				}
 				else if(radius < 100.0 && my_location_radius < 100.0){
+					alert('add track');
 					hist_locations.addLayer(new L.polyline([last_stored_position.getLatLng(), e.latlng]));
 					last_stored_position = my_location;
 				}
