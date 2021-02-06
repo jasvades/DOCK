@@ -284,10 +284,10 @@
 				map.setView(position);
 			}
 			else{
-				if(radius < 100.0 && my_location_radius < 100.0){
+				//if(radius < 100.0 && my_location_radius < 100.0){
 					hist_locations.addLayer(new L.polyline([last_stored_position.getLatLng(), e.latlng]));
 					last_stored_position = my_location;
-				}
+					//}
 				my_location
 				.setLatLng(e.latlng)
 				.bindPopup("Je bent maximaal " + Math.round(radius) + " meter van dit punt");
