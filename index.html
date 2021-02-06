@@ -283,11 +283,13 @@
 				map.setView(position);
 			}
 			else{
-				if(radius < 50 && my_location_radius < 50){
+				if(radius < 50.0 && my_location_radius < 50.0){
 					hist_locations.addLayer(new L.polyline([my_location.getLatLng(), e.latlng]));
 				}
 				my_location
 				.setLatLng(e.latlng);
+				.bindPopup("Je bent maximaal " + Math.round(radius) + " meter van dit punt").openPopup();
+				
 				my_location_radius
 				.setLatLng(e.latlng)
 				.setRadius(radius);
