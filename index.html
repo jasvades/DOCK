@@ -290,6 +290,7 @@
 				}
 				else if(radius < 100.0 && map.distance(last_stored_position.getLatLng(), e.latlng()) > 50.0){
 					hist_segments.addLayer(new L.polyline([last_stored_position.getLatLng(), e.latlng]));
+					hist_locations.addLayer(new L.circle(last_stored_position.getLatLng(), 20.0)).addTo(map);
 					last_stored_position = my_location;
 				}
 				my_location
@@ -335,6 +336,7 @@
 		
 		
 		var hist_segments = new L.layerGroup();
+		var hist_locations = new L.layerGroup();
 		function enableHistoryLocationTracking(map){
 			L.easyButton({
 				states: [{
