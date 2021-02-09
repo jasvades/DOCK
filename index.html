@@ -155,8 +155,9 @@
     <script src="easy-button.js"></script>
     <script src='togpx.js'></script>
     <script src="FileSaver.js"></script>
-	<script src="https://unpkg.com/ionicons@5.0.0/dist/ionicons.js"></script>
-
+	<script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
+    <script src="all.js"></script>
+	
 	<!-- load google API -->
 	<script src="https://apis.google.com/js/api.js"></script>
 
@@ -287,8 +288,8 @@
 				if(last_stored_position === undefined && radius < 100.0){
 					last_stored_position = my_location;
 				}
-				else if(radius < 100.0){
-					hist_locations.addLayer(new L.polyline([last_stored_position.getLatLng(), e.latlng]));
+				else if(radius < 100.0 && map.distance(last_stored_position.getLatLng(), e.latlng()) > 50.0){
+					hist_segments.addLayer(new L.polyline([last_stored_position.getLatLng(), e.latlng]));
 					last_stored_position = my_location;
 				}
 				my_location
@@ -333,12 +334,12 @@
 			}
 		
 		
-		var hist_locations = new L.layerGroup();
+		var hist_segments = new L.layerGroup();
 		function enableHistoryLocationTracking(map){
 			L.easyButton({
 				states: [{
 					stateName: 'enable',
-					icon:      '<span class="easybutton">&#10561;</ion-icon></span>',
+					icon:      '<span class="easybutton"><ion-icon size="small" name="eye-outline"></ion-icon></span>',
 					title:     'enable GPS tracking',
 					onClick: function(btn, map) {
 						map.locate({
@@ -350,7 +351,7 @@
 					},
 					{
 						stateName: 'disable',
-						icon:      '<span class="easybutton"><ion-icon size="small" name="download"></ion-icon></span>',
+						icon:      '<span class="easybutton"><ion-icon size="small" name="eye-off-outline"></ion-icon></span>',
 						title:     'click to disable tracking and save track',
 						onClick: function(btn, map) {
 							btn.state('enable');
@@ -359,7 +360,7 @@
 														
 							var filename = prompt('Give the filename to store the GPX file');
 							if (filename != null){
-								var gpx_file = togpx(hist_locations.toGeoJSON());
+								var gpx_file = togpx(hist_segments.toGeoJSON());
 								var blob = new Blob([gpx_file], { type: "text/plain;charset=utf-8" });
 								saveAs(blob, filename + ".gpx");
 							}
@@ -423,7 +424,7 @@
 			L.easyButton({
 				states: [{
 					stateName: 'enable',
-					icon:      '<span class="easybutton"><ion-icon size="small" name="eye-outline"></ion-icon></span>',
+					icon:      '<span class="easybutton"><ion-icon name="footsteps-outline"></ion-icon></span>',
 					title:     'enable realtime locations import via google sheets',
 					onClick: function(btn, map){
 						var sheetsUrl = prompt( 'geef de spreadsheet ID & eventueel sheet name + range (in volgende formaat: <id>/values/Sheet1!A1:Z)' );
@@ -436,7 +437,7 @@
 					},
 					{
 						stateName: 'disable',
-						icon:      '<span class="easybutton"><ion-icon size="small" name="eye"></ion-icon></span>',
+						icon:      '<span class="easybutton"><ion-icon name="footsteps"></ion-icon></span>',
 						title:     'disable realtime locations',
 						onClick: function(btn, map) {
 							btn.state('enable'); // change state on click!

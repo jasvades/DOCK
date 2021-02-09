@@ -31,8 +31,8 @@ L.Control.Measure = L.Control.extend({
 		var container = L.DomUtil.create('div', className)
 		container.setAttribute('tooltip', 'Measure tool in km unit supporting multi-segment')
 		container.removeAttribute('title')
-		this._createButton('<span class="easybutton">&#8596;</span>', 'Measure',
-		'leaflet-control-measure leaflet-bar-part leaflet-bar-part-top-and-bottom',
+		this._createButton('<i class="fas fa-ruler" data-fa-transform="down-4"></i>', 'Measure',
+		'leaflet-control-measure leaflet-bar-part leaflet-bar-part-top-and-bottom easybutton',
 		container, this._toggleMeasure, this)
 
 		if (this.options.keyboard) {
