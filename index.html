@@ -196,11 +196,15 @@
 			
 			var tileURLs = new Array();
 			
+			//https://leaflet-extras.github.io/leaflet-providers/preview/
+			
 			tileURLs['thunderforest - landscape'] = 'https://tile.thunderforest.com/landscape/{z}/{x}/{y}{r}.png?apikey=f3489ae724f24f8596a74bac7100dabd';
 			tileURLs['mapbox - streets'] = 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}';
 			tileURLs['mapbox - satellite'] = 'https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/{z}/{x}/{y}?access_token={accessToken}';
 			tileURLs['mapbox - satellite&streets'] = 'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}';
 			tileURLs['openstreetmap - classic'] = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+			tileURLs['OpenTopoMap'] = 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png';
+			tileURLs['ESRI - satellite'] = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
 			
 			tileLayers = new Array();
 			
