@@ -70,7 +70,7 @@ L.Control.Measure = L.Control.extend({
 		if (this._measuring) {
 			L.DomUtil.addClass(this._container, 'leaflet-control-measure-on')
 			this._startMeasuring()
-		} else if (gpx && !(/iPhone|iPad|iPod|Android/i.test(navigator.userAgent))) {
+		} else if (gpx) {
 			var filename = prompt('Give the filename to store the GPX file');
 			if (filename != null){
 				var gpx_file = togpx(this._layerPaint.toGeoJSON());
