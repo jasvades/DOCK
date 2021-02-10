@@ -292,9 +292,9 @@
 				if(last_stored_position === undefined && radius < 100.0){
 					last_stored_position = my_location;
 				}
-				else if(radius < 100.0 && map.distance(last_stored_position.getLatLng(), e.latlng) > 50.0){
+				else if(radius < 100.0 && (map.distance(last_stored_position.getLatLng(), e.latlng) > 10.0 + radius)){
 					hist_segments.addLayer(new L.polyline([last_stored_position.getLatLng(), e.latlng]));
-					hist_locations.addLayer(new L.circle(last_stored_position.getLatLng(), 20.0).addTo(map));
+					hist_locations.addLayer(new L.circle(last_stored_position.getLatLng(), 5.0, {opacity: 0.75, fill: true}).addTo(map));
 					last_stored_position = my_location;
 				}
 				my_location
@@ -372,6 +372,7 @@
 							}
 							map.removeLayer(my_location);
 							map.removeLayer(my_location_radius);
+							hist_locations.eachLayer(function (layer) {layer.remove();});
 							
 							my_location = undefined;
 							my_location_radius = undefined;
@@ -632,7 +633,7 @@
 						shadowUrl: ''
 					},
 					polyline_options: {
-						opacity: 0.8,
+						opacity: 0.75,
 						color : color,
 						weight: 5,
 						lineCap: 'round'
