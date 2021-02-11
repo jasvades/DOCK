@@ -276,34 +276,31 @@
 		var my_location;
 		var last_stored_position;
 		var my_location_radius;						
-		function onLocationFound(e) {
-			var radius = e.accuracy;
-			
-			position = e.latlng;
+		function onLocationFound(e) {			
 			if(my_location === undefined){
 				my_location = L.marker(e.latlng).addTo(map)
-				.bindPopup("Je bent maximaal " + Math.round(radius) + " meter van dit punt").openPopup();
+				.bindPopup("Je bent maximaal " + Math.round(e.accuracy) + " meter van dit punt").openPopup();
 
-				my_location_radius = L.circle(e.latlng, radius).addTo(map);
+				my_location_radius = L.circle(e.latlng, e.accuracy).addTo(map);
 				map.setZoom(16);
-				map.setView(position);
+				map.setView(e.latlng);
 			}
 			else{
-				if(last_stored_position === undefined && radius < 100.0){
-					last_stored_position = my_location;
+				if(last_stored_position === undefined && e.accuracy < 100.0){
+					last_stored_position = my_location.getLatLng();
 				}
-				else if(radius < 100.0 && (map.distance(last_stored_position.getLatLng(), e.latlng) > 10.0 + radius)){
-					hist_segments.addLayer(new L.polyline([last_stored_position.getLatLng(), e.latlng]));
-					hist_locations.addLayer(new L.circle(last_stored_position.getLatLng(), 5.0, {opacity: 0.75, fill: true}).addTo(map));
-					last_stored_position = my_location;
+				else if(e.accuracy < 100.0 && (map.distance(last_stored_position, e.latlng) > 10.0 + e.accuracy)){
+					hist_segments.addLayer(new L.polyline([last_stored_position, e.latlng]));
+					hist_locations.addLayer(new L.circle(last_stored_position, 5.0, {opacity: 0.5, fillOpacity: 0.5, fill: true}).addTo(map));
+					last_stored_position = my_location.getLatLng();
 				}
 				my_location
 				.setLatLng(e.latlng)
-				.bindPopup("Je bent maximaal " + Math.round(radius) + " meter van dit punt");
+				.bindPopup("Je bent maximaal " + Math.round(e.accuracy) + " meter van dit punt");
 				
 				my_location_radius
 				.setLatLng(e.latlng)
-				.setRadius(radius);
+				.setRadius(e.accuracy);
 			}
 		}
 
