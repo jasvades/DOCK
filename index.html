@@ -272,11 +272,11 @@
 		}
 		
 		
-		var my_location;
-		var last_stored_position;
-		var my_location_radius;						
+		var my_location = null;
+		var last_stored_position = null;
+		var my_location_radius = null;						
 		function onLocationFound(e) {			
-			if(my_location === undefined){
+			if(my_location === null){
 				my_location = L.marker(e.latlng).addTo(map)
 				.bindPopup("Je bent maximaal " + Math.round(e.accuracy) + " meter van dit punt").openPopup();
 
@@ -285,10 +285,16 @@
 				map.setView(e.latlng);
 			}
 			else{
-				if(last_stored_position === undefined && e.accuracy < 100.0){
+				if(last_stored_position === null &&
+					e.accuracy < 100.0 &&
+					tracking_button._currentState === 'enable'
+				){
 					last_stored_position = my_location.getLatLng();
 				}
-				else if(e.accuracy < 100.0 && (map.distance(last_stored_position, e.latlng) > 10.0 + e.accuracy)){
+				else if(e.accuracy < 100.0 &&
+					(map.distance(last_stored_position, e.latlng) > 10.0 + e.accuracy) &&
+					tracking_button._currentState === 'enable'
+				){
 					hist_segments.addLayer(new L.polyline([last_stored_position, e.latlng]));
 					hist_locations.addLayer(new L.circle(last_stored_position, 5.0, {opacity: 0.5, fillOpacity: 0.5, fill: true}).addTo(map));
 					last_stored_position = my_location.getLatLng();
@@ -309,8 +315,9 @@
 		}
 		
 		
+		var location_button;
 		function enableLocationTracking(map){
-			L.easyButton({
+			location_button = L.easyButton({
 				states: [{
 					stateName: 'enable',
 					icon:      '<span class="easybutton"><ion-icon size="small" name="navigate-outline"></ion-icon></span>',
@@ -335,10 +342,11 @@
 			}
 		
 		
+		var tracking_button;
 		var hist_segments = new L.layerGroup();
 		var hist_locations = new L.layerGroup();
 		function enableHistoryLocationTracking(map){
-			L.easyButton({
+			tracking_button = L.easyButton({
 				states: [{
 					stateName: 'enable',
 					icon:      '<span class="easybutton"><ion-icon size="small" name="eye-outline"></ion-icon></span>',
@@ -349,6 +357,7 @@
 							watch: true,
 							enableHighAccuracy: true});
 						btn.state('disable'); // change state on click!
+						location_button.state('relocate');
 					}
 					},
 					{
@@ -357,7 +366,7 @@
 						title:     'click to disable tracking and save track',
 						onClick: function(btn, map) {
 							btn.state('enable');
-							
+							location_button.state('enable');
 							map.stopLocate();
 														
 							var filename = prompt('Give the filename to store the GPX file');
@@ -369,9 +378,11 @@
 							map.removeLayer(my_location);
 							map.removeLayer(my_location_radius);
 							hist_locations.eachLayer(function (layer) {layer.remove();});
+							hist_segments.eachLayer(function (layer) {layer.remove();});
 							
-							my_location = undefined;
-							my_location_radius = undefined;
+							my_location = null;
+							my_location_radius = null;
+							last_stored_position = null;
 						}
 					}]}
 				).addTo( map );
