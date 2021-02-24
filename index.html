@@ -272,7 +272,6 @@
 		}
 		
 		
-		var position;
 		var my_location;
 		var last_stored_position;
 		var my_location_radius;						
@@ -329,7 +328,7 @@
 						icon:      '<span class="easybutton"><ion-icon size="small" name="navigate"></ion-icon></span>',
 						title:     'click to relocate current position',
 						onClick: function(btn, map) {
-							map.setView(position);
+							map.setView(my_location.getLatLng());
 						}
 					}]}
 				).addTo( map );
