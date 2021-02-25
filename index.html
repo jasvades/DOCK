@@ -278,14 +278,15 @@
 		var location_button;
 		var tracking_button;
 		function onLocationFound(e) {			
-			if(my_location === null){
+			if(my_location === null &&
+				location_button.state() !== 'enable'
+			){
 				my_location = L.marker(e.latlng).addTo(map)
 				.bindPopup("Je bent maximaal " + Math.round(e.accuracy) + " meter van dit punt").openPopup();
 
 				my_location_radius = L.circle(e.latlng, e.accuracy).addTo(map);
 				map.setZoom(16);
 				map.setView(e.latlng);
-				alert('recalc');
 			}
 			else{
 				if(last_stored_position === null &&
@@ -325,11 +326,11 @@
 					icon:      '<span class="easybutton"><ion-icon size="small" name="navigate-outline"></ion-icon></span>',
 					title:     'enable GPS location',
 					onClick: function(btn, map) {
+						btn.state('relocate'); // change state on click!
 						map.locate({
 							setView: false,
 							watch: true,
 							enableHighAccuracy: true});  
-						btn.state('relocate'); // change state on click!
 					}
 					},
 					{
@@ -338,7 +339,6 @@
 						title:     'click to relocate current position',
 						onClick: function(btn, map) {
 							map.setView(my_location.getLatLng());
-							alert('reloc');
 						}
 					}]}
 				).addTo( map );
@@ -354,12 +354,12 @@
 					icon:      '<span class="easybutton"><ion-icon size="small" name="eye-outline"></ion-icon></span>',
 					title:     'enable GPS tracking',
 					onClick: function(btn, map) {
+						location_button.state('relocate');
+						btn.state('disable'); // change state on click!
 						map.locate({
 							setView: false,
 							watch: true,
 							enableHighAccuracy: true});
-						btn.state('disable'); // change state on click!
-						location_button.state('relocate');
 					}
 					},
 					{
