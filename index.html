@@ -289,19 +289,19 @@
 				map.setView(e.latlng);
 			}
 			else{
-				if(last_stored_position === null &&
-					e.accuracy < 100.0 &&
-					tracking_button.state() !== 'enable'
-				){
-					last_stored_position = my_location.getLatLng();
-				}
-				else if(e.accuracy < 100.0 &&
-					(map.distance(last_stored_position, e.latlng) > 10.0 + e.accuracy) &&
-					tracking_button.state() !== 'enable'
-				){
-					hist_segments.addLayer(new L.polyline([last_stored_position, e.latlng]));
-					hist_locations.addLayer(new L.circle(last_stored_position, 5.0, {opacity: 0.5, fillOpacity: 0.5, fill: true}).addTo(map));
-					last_stored_position = my_location.getLatLng();
+				if(tracking_button.state() !== 'enable'){
+					if(last_stored_position === null &&
+						e.accuracy < 100.0
+					){
+						last_stored_position = my_location.getLatLng();
+					}
+					else if(e.accuracy < 100.0 &&
+						(map.distance(last_stored_position, e.latlng) > 10.0 + e.accuracy)
+					){
+						hist_segments.addLayer(new L.polyline([last_stored_position, e.latlng]));
+						hist_locations.addLayer(new L.circle(last_stored_position, 5.0, {opacity: 0.5, fillOpacity: 0.5, fill: true}).addTo(map));
+						last_stored_position = my_location.getLatLng();
+					}
 				}
 				my_location
 				.setLatLng(e.latlng)
