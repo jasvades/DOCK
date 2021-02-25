@@ -380,8 +380,8 @@
 
 							map.removeLayer(my_location);
 							map.removeLayer(my_location_radius);
-							hist_locations.eachLayer(function (layer) {layer.remove();});
-							hist_segments.eachLayer(function (layer) {layer.remove();});
+							hist_locations.eachLayer(function (layer) {layer.remove(); hist_locations.removeLayer(layer);});
+							hist_segments.eachLayer(function (layer) {layer.remove(); hist_segments.removeLayer(layer);});
 							
 							my_location = null;
 							my_location_radius = null;
