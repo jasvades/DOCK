@@ -285,6 +285,7 @@
 				my_location_radius = L.circle(e.latlng, e.accuracy).addTo(map);
 				map.setZoom(16);
 				map.setView(e.latlng);
+				alert('recalc');
 			}
 			else{
 				if(last_stored_position === null &&
@@ -337,6 +338,7 @@
 						title:     'click to relocate current position',
 						onClick: function(btn, map) {
 							map.setView(my_location.getLatLng());
+							alert('reloc');
 						}
 					}]}
 				).addTo( map );
