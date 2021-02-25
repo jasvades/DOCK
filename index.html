@@ -275,6 +275,8 @@
 		var my_location = null;
 		var last_stored_position = null;
 		var my_location_radius = null;						
+		var location_button;
+		var tracking_button;
 		function onLocationFound(e) {			
 			if(my_location === null){
 				my_location = L.marker(e.latlng).addTo(map)
@@ -315,7 +317,6 @@
 		}
 		
 		
-		var location_button;
 		function enableLocationTracking(map){
 			location_button = L.easyButton({
 				states: [{
@@ -323,7 +324,6 @@
 					icon:      '<span class="easybutton"><ion-icon size="small" name="navigate-outline"></ion-icon></span>',
 					title:     'enable GPS location',
 					onClick: function(btn, map) {
-						alert('locate');
 						map.locate({
 							setView: false,
 							watch: true,
@@ -343,7 +343,6 @@
 			}
 		
 		
-		var tracking_button;
 		var hist_segments = new L.layerGroup();
 		var hist_locations = new L.layerGroup();
 		function enableHistoryLocationTracking(map){
@@ -353,7 +352,6 @@
 					icon:      '<span class="easybutton"><ion-icon size="small" name="eye-outline"></ion-icon></span>',
 					title:     'enable GPS tracking',
 					onClick: function(btn, map) {
-						alert('track');
 						map.locate({
 							setView: false,
 							watch: true,
@@ -377,6 +375,7 @@
 								var blob = new Blob([gpx_file], { type: "text/plain;charset=utf-8" });
 								saveAs(blob, filename + ".gpx");
 							}
+
 							map.removeLayer(my_location);
 							map.removeLayer(my_location_radius);
 							hist_locations.eachLayer(function (layer) {layer.remove();});
