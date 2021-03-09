@@ -138,6 +138,12 @@
 		_toggle: function() {
 			if (this._container.className.indexOf('leaflet-control-geocoder-expanded') >= 0) {
 				this._collapse();
+				if (this._selection) {
+					var index = parseInt(this._selection.firstChild.getAttribute('data-result-index'), 10);
+					this._geocodeResultSelected(this._results[index]);
+					this._clearResults();
+					L.DomEvent.preventDefault(e);
+				}
 			} else {
 				this._expand();
 			}
