@@ -143,6 +143,7 @@
 	<!-- load leaflet API -->
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
 	integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="crossorigin=""/>
+	<link rel="stylesheet" href="Control.Geocoder.css" />
 		
 	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
 	integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="crossorigin="">
@@ -163,6 +164,9 @@
 
 	<!-- load jQuery -->
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+	
+	<!-- load Geocoder -->
+	<script src="Control.Geocoder.js"></script>
 	
 	<!-- load supporting functions -->    
 	<div id="map"></div>
@@ -397,7 +401,7 @@
 		function enableMeasure(map){
 			measure_control = L.control.measure({
 				position: 'topleft',
-				keyboard: true,	//  weather to use keyboard control for this plugin
+				keyboard: false,	//  weather to use keyboard control for this plugin
 				activeKeyCode: 'M'.charCodeAt(0),	//  shortcut to activate measure
 				cancelKeyCode: 27,	//  shortcut to cancel measure, defaults to 'Esc'
 				lineColor: '#a8250d',
@@ -673,7 +677,6 @@
 			}, 'import GPX routes').addTo( map );
 		}
 
-
 		</script>
 	</head>
 	<body>
@@ -684,6 +687,7 @@
 			map.on('locationerror', onLocationError);
 			
 			enableMeasure(map);
+			var geocoder = L.Control.geocoder({position: 'topleft', collapsed: 'true'}).addTo(map);
 			enableLocationTracking(map);
 			enableHistoryLocationTracking(map);
 			enableGPXupload(map);
