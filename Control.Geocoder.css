@@ -24,13 +24,13 @@
 }
 
 .leaflet-control-geocoder-form input {
-	font-size: 16pt;
+	font-size: 12pt;
 	width: 0;
 	transition: width 0.125s ease-in;
 }
 
-.leaflet-touch .leaflet-control-geocoder-form input {
-	font-size: 16pt;
+.leaflet-touch.leaflet-control-geocoder-form input {
+	font-size: 12pt;
 }
 
 .leaflet-control-geocoder-icon {
@@ -109,11 +109,11 @@ ul.leaflet-control-geocoder-alternatives {
 	text-decoration: none;
 	color: black;
 	padding: 6px 8px 16px 6px;
-	font-size: 14pt;
+	font-size: 10pt;
 }
 
-.leaflet-touch .leaflet-control-geocoder-alternatives a {
-	font-size: 12pt;
+.leaflet-touch.leaflet-control-geocoder-alternatives a {
+	font-size: 10pt;
 }
 
 .leaflet-control-geocoder-alternatives a:hover, .leaflet-control-geocoder-selected {
