@@ -219,6 +219,7 @@
 
 	L.Control.Geocoder.callbackId = 0;
 	L.Control.Geocoder.jsonp = function(url, params, callback, context, jsonpParam) {
+			alert(2);
 		var callbackId = '_l_geocoder_' + (L.Control.Geocoder.callbackId++);
 		params[jsonpParam || 'callback'] = callbackId;
 		window[callbackId] = L.Util.bind(callback, context);
@@ -227,6 +228,8 @@
 		script.src = url + L.Util.getParamString(params);
 		script.id = callbackId;
 		document.getElementsByTagName('head')[0].appendChild(script);
+
+		alert(3);
 	};
 
 	L.Control.Geocoder.Nominatim = L.Class.extend({
@@ -245,6 +248,8 @@
 				limit: 5,
 				format: 'json'
 			}, function(data) {
+
+				alert(4);
 				var results = [];
 				for (var i = data.length - 1; i >= 0; i--) {
 					var bbox = data[i].boundingbox;
@@ -267,6 +272,8 @@
 					};
 				}
 				cb.call(context, results);
+
+				alert(5);
 			}, this, 'json_callback');
 		},
 	});
