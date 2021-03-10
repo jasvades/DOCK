@@ -30,9 +30,8 @@
 }
 
 .leaflet-touch.leaflet-control-geocoder-form input {
-  	width: 26px;
-  	height: 26px;
-	font-size: 8pt;
+  	width: 0;
+	font-size: 12pt;
 }
 
 .leaflet-control-geocoder-icon {
