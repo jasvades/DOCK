@@ -219,7 +219,6 @@
 
 	L.Control.Geocoder.callbackId = 0;
 	L.Control.Geocoder.jsonp = function(url, params, callback, context, jsonpParam) {
-		alert(2);
 		var callbackId = '_l_geocoder_' + (L.Control.Geocoder.callbackId++);
 		params[jsonpParam || 'callback'] = callbackId;
 		window[callbackId] = L.Util.bind(callback, context);
@@ -233,7 +232,7 @@
 
 	L.Control.Geocoder.Nominatim = L.Class.extend({
 		options: {
-			serviceUrl: 'http://nominatim.openstreetmap.org/search/'
+			serviceUrl: 'https://nominatim.openstreetmap.org/search/'
 		},
 
 		initialize: function(options) {
@@ -241,9 +240,9 @@
 		},
 
 		geocode: function(query, cb, context) {
-			alert(1);
 			L.Control.Geocoder.jsonp(this.options.serviceUrl, {
 				q: query,
+				limit: 5,
 				format: 'json'
 			}, function(data) {
 				var results = [];
@@ -282,7 +281,7 @@
 		},
 
 		geocode : function (query, cb, context) {
-			L.Control.Geocoder.jsonp('http://dev.virtualearth.net/REST/v1/Locations', {
+			L.Control.Geocoder.jsonp('https://dev.virtualearth.net/REST/v1/Locations', {
 				query: query,
 				key : this.key
 			}, function(data) {
