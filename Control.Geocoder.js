@@ -190,6 +190,17 @@
 				};
 
 			switch (e.keyCode) {
+			// Up
+			case 38:
+				select(-1);
+				L.DomEvent.preventDefault(e);
+				break;
+			// Up
+			case 40:
+				select(1);
+				L.DomEvent.preventDefault(e);
+				break;
+			// Enter
 			case 13:
 				if (this._selection) {
 					var index = parseInt(this._selection.firstChild.getAttribute('data-result-index'), 10);
@@ -228,6 +239,7 @@
 		},
 
 		geocode: function(query, cb, context) {
+			alert(1);
 			L.Control.Geocoder.jsonp(this.options.serviceUrl, {
 				q: query,
 				limit: 5,
