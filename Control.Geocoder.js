@@ -142,7 +142,6 @@
 					var index = parseInt(this._selection.firstChild.getAttribute('data-result-index'), 10);
 					this._geocodeResultSelected(this._results[index]);
 					this._clearResults();
-					L.DomEvent.preventDefault(e);
 				}
 			} else {
 				this._expand();
