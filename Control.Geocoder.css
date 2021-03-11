@@ -25,7 +25,7 @@
 
 .leaflet-control-geocoder-form input {
 	font-size: 11pt;
-	height: 30px;
+	height: 26px;
 	display: table-cell;
 	vertical-align: middle;
 	width: 0;
@@ -50,8 +50,8 @@
 
 .leaflet-control-geocoder-expanded input, .leaflet-control-geocoder-error {
 	width: 226px;
-        padding-left: 0px;
 	padding-right: 0px;
+	padding-left: 0px;
 	color: #000;
 }
 
