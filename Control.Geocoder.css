@@ -29,16 +29,17 @@
 	height: 30px;
 	display: table-cell;
 	vertical-align: middle;
-	width: 10px;
+	width: 0px;
 	transition: width 0.125s ease-in;
 }
 
 .leaflet-control-geocoder-icon {
-	width: 20px;
+	width: 26px;
 	height: 30px;
 	background-image: url(search-outline.svg);
 	background-repeat: no-repeat;
 	background-position: center;
+	background-size:70%;
 	float: right;
 	cursor: pointer;
 }
