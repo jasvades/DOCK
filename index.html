@@ -688,12 +688,12 @@
 			map.on('locationerror', onLocationError);
 			
 			enableMeasure(map);
-			var geocoder = L.Control.geocoder({position: 'topleft', collapsed: 'true'}).addTo(map);
 			enableLocationTracking(map);
 			enableHistoryLocationTracking(map);
 			enableGPXupload(map);
 			enableRealtimeLocationsSheets(map);
 			//loadSheetsOnce(map, <sheetsID>, <googleAPIkey>);		
+			var geocoder = L.Control.geocoder({position: 'topleft', collapsed: 'true'}).addTo(map);
 			
 		</script>				
 	</body>
