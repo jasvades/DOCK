@@ -16,118 +16,6 @@
 		.blinking {
 			animation: fade 2s infinite alternate;
 		}
-
-		.easybutton {
-			opacity: 1;
-			padding: 0;
-			font-size: 18;
-		}
-		
-		.leaflet-bar button,
-		.leaflet-bar button:hover {
-		  background-color: #fff;
-		  border: none;
-		  border-bottom: 1px solid #ccc;
-		  width: 26px;
-		  height: 26px;
-		  line-height: 26px;
-		  display: block;
-		  text-align: center;
-		  text-decoration: none;
-		  color: black;
-		}
-
-		.leaflet-bar button {
-		  background-position: 50% 50%;
-		  background-repeat: no-repeat;
-		  display: block;
-		}
-
-		.leaflet-bar button:hover {
-		  background-color: #f4f4f4;
-		}
-
-		.leaflet-bar button:first-of-type {
-		  border-top-left-radius: 4px;
-		  border-top-right-radius: 4px;
-		}
-
-		.leaflet-bar button:last-of-type {
-		  border-bottom-left-radius: 4px;
-		  border-bottom-right-radius: 4px;
-		  border-bottom: none;
-		}
-
-		.leaflet-bar.disabled,
-		.leaflet-bar button.disabled {
-		  cursor: default;
-		  pointer-events: none;
-		  opacity: .4;
-		}
-
-		.easy-button-button .button-state{
-		  display: block;
-		  position: relative;
-		}
-
-		.leaflet-touch .leaflet-bar button {
-		  width: 30px;
-		  height: 30px;
-		  line-height: 30px;
-		}
-		
-		.tooltip{
-			position: relative;
-			display: inline;
-		}
-		
-		.tooltip:after{
-			font-size: 9pt;
-			display: block;
-			visibility: hidden;
-			position: absolute;
-			bottom: 0;
-			left: 120%;
-			opacity: 0;
-			content: attr(tooltip); /* might also use attr(title) */
-			height: auto;
-			min-width: 100px;
-			padding: 5px 8px;
-			z-index: 999;
-			color: #000; /* textcolor */
-			text-decoration: none;
-			text-align: center;
-			background: rgba(255,255,255,0.85); /* backgroundcolor */
-			-webkit-border-radius: 5px;
-			-moz-border-radius: 5px;
-			border-radius: 5px;
-		}
-		
-		.tooltip:before {
-			position: absolute;
-			visibility: hidden;
-			width: 0;
-			height: 0;
-			left: 120%;
-			bottom: 0px;
-			opacity: 0;
-			content: "";
-			border-style: solid;
-			border-width: 6px 6px 0 6px;
-			border-color: rgba(255,255,255,0.85) transparent transparent transparent;
-		}
-		
-		.tooltip:hover:after{
-			visibility: visible;
-			opacity: 1;
-			bottom: 20px;
-		}
-		
-		.tooltip:hover:before{
-			visibility: visible;
-			opacity: 1;
-			bottom: 14px;
-		}
 		
 		.dot {
 		  height: 1em;
@@ -144,6 +32,8 @@
 	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
 	integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="crossorigin=""/>
 	<link rel="stylesheet" href="Control.Geocoder.css" />
+	<link rel="stylesheet" href="tooltip.css"/>
+	<link rel="stylesheet" href="easybutton.css" />
 		
 	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
 	integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="crossorigin="">
@@ -151,22 +41,22 @@
 
 	<!-- load leaflet extensions -->
 	<script src="leaflet-realtime.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-gpx/1.4.0/gpx.min.js"></script>
+    <script src="gpx.min.js"></script> <!-- load leaflet-gpx -->
     <script src="leaflet.measure.js"></script>
     <script src="easy-button.js"></script>
     <script src='togpx.js'></script>
     <script src="FileSaver.js"></script>
 	<script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
     <script src="all.js"></script>
+	<link rel="stylesheet" href="leaflet-routing-machine-3.2.12/dist/leaflet-routing-machine.css" />
+	<script src="leaflet-routing-machine-3.2.12/dist/leaflet-routing-machine.js"></script>
+	<script src="Control.Geocoder.js"></script>
 	
 	<!-- load google API -->
 	<script src="https://apis.google.com/js/api.js"></script>
 
 	<!-- load jQuery -->
 	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-	
-	<!-- load Geocoder -->
-	<script src="Control.Geocoder.js"></script>
 	
 	<!-- load supporting functions -->    
 	<div id="map"></div>
@@ -678,6 +568,50 @@
 			}, 'import GPX routes').addTo( map );
 		}
 
+
+		var geocoder;
+		function enableGeocoder(map) {
+			geocoder = L.Control.geocoder({position: 'topleft', collapsed: 'true'}).addTo(map);
+		}
+		
+		var control;
+		function enableRouter(map) {
+			L.easyButton('<ion-icon name="trail-sign-outline"></ion-icon>', function(btn, map){ //https://www.htmlsymbols.xyz/arrow-symbols
+				if(control == undefined){
+					control = L.Routing.control({
+						autoRoute: true,
+						routeWhileDragging: true,
+						showAlternatives: true,
+						show: true,
+						collapsible: true,
+						geocoder: L.Control.Geocoder.nominatim(),
+						router: L.Routing.mapbox('pk.eyJ1IjoiZHJvcHBpbmdjaGlrYSIsImEiOiJja2dkdXQ4aTQwbXBqMnJsZXNsNTRqdG53In0.H_xtqAmm1KwWN_vQA7Vb-g')
+					}).addTo(map);
+					
+					// TODO remove waypoint from map on 2nd click
+					map.off('click dblclick mousedown zoomanim contextmenu');
+					map.on('click', function(e) {
+						waypoints = control.getWaypoints();
+						if(waypoints[0].latLng == undefined){
+							control.spliceWaypoints(0, 1, e.latlng);
+						}
+						else if(waypoints[1].latLng == undefined){
+							control.spliceWaypoints(1, 1, e.latlng);
+						}
+						else{
+							control.spliceWaypoints(control.getWaypoints().length, 0, e.latlng);
+						}
+					});
+				}
+				else{
+					control.remove();
+					control = undefined;
+					map.off('click');
+					map.on('click dblclick mousedown zoomanim contextmenu', onMapClick);
+				}
+			}, 'enable routing').addTo( map );
+		}
+
 		</script>
 	</head>
 	<body>
@@ -693,8 +627,8 @@
 			enableGPXupload(map);
 			enableRealtimeLocationsSheets(map);
 			//loadSheetsOnce(map, <sheetsID>, <googleAPIkey>);		
-			var geocoder = L.Control.geocoder({position: 'topleft', collapsed: 'true'}).addTo(map);
-			
-		</script>				
+			enableRouter(map);
+			enableGeocoder(map);
+  </script>
 	</body>
 </html>

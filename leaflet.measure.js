@@ -53,6 +53,7 @@ L.Control.Measure = L.Control.extend({
 		link.innerHTML = html
 		link.href = '#'
 		link.title = title
+		link.id = 'button_measure';
 
 		L.DomEvent
 		.on(link, 'click', L.DomEvent.stopPropagation)
@@ -70,6 +71,7 @@ L.Control.Measure = L.Control.extend({
 		if (this._measuring) {
 			L.DomUtil.addClass(this._container, 'leaflet-control-measure-on')
 			this._startMeasuring()
+			L.DomUtil.get('button_measure').innerHTML = '<i class="fas fa-ruler-vertical" data-fa-transform="down-5"></i>', 'Measure';
 		} else if (gpx) {
 			var filename = prompt('Give the filename to store the GPX file');
 			if (filename != null){
@@ -79,9 +81,11 @@ L.Control.Measure = L.Control.extend({
 			}
 			L.DomUtil.removeClass(this._container, 'leaflet-control-measure-on')
 			this._stopMeasuring()
+			L.DomUtil.get('button_measure').innerHTML = '<i class="fas fa-ruler" data-fa-transform="down-5"></i>', 'Measure';
 		}
 		else {
 			this._stopMeasuring()
+			L.DomUtil.get('button_measure').innerHTML = '<i class="fas fa-ruler" data-fa-transform="down-5"></i>', 'Measure';
 		}
 	},
 
