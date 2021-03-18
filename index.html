@@ -588,7 +588,6 @@
 						router: L.Routing.mapbox('pk.eyJ1IjoiZHJvcHBpbmdjaGlrYSIsImEiOiJja2dkdXQ4aTQwbXBqMnJsZXNsNTRqdG53In0.H_xtqAmm1KwWN_vQA7Vb-g')
 					}).addTo(map);
 					
-					// TODO remove waypoint from map on 2nd click
 					map.off('click dblclick mousedown zoomanim contextmenu');
 					map.on('click', function(e) {
 						waypoints = control.getWaypoints();
