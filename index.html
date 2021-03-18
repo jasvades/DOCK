@@ -472,18 +472,19 @@
 			var locations_geojson = {};
 			locations_geojson.type = 'FeatureCollection';
 			locations_geojson.features = [];
-			
 			$(locations).each(function() {
 				var location = {};
 				location.type = 'Feature';
-				location.properties = {
-					featureId: labels_1[locations.indexOf(this)],
-					label_1: labels_1[locations.indexOf(this)],
-					label_2: labels_2[locations.indexOf(this)],
-					label_3: labels_3[locations.indexOf(this)],
-					label_4: labels_4[locations.indexOf(this)],
-					label_5: labels_5[locations.indexOf(this)]
-				};
+				if(labels_1 && labels_2 && labels_3 && labels_4 && labels_5){
+					location.properties = {
+						featureId: labels_1 ? labels_1[locations.indexOf(this)]: '',
+						label_1: labels_1 ? labels_1[locations.indexOf(this)]: '',
+						label_2: labels_2 ? labels_2[locations.indexOf(this)]: '',
+						label_3: labels_3 ? labels_3[locations.indexOf(this)]: '',
+						label_4: labels_4 ? labels_4[locations.indexOf(this)]: '',
+						label_5: labels_5 ? labels_5[locations.indexOf(this)]: ''
+					};
+				}
 				location.geometry = {};
 				location.geometry.type = 'Point';
 				location.geometry.coordinates = [parseFloat(this[0]), parseFloat(this[1])];
@@ -575,40 +576,75 @@
 		}
 		
 		var control;
+		var route;
 		function enableRouter(map) {
-			L.easyButton('<ion-icon name="trail-sign-outline"></ion-icon>', function(btn, map){ //https://www.htmlsymbols.xyz/arrow-symbols
-				if(control == undefined){
-					control = L.Routing.control({
-						autoRoute: true,
-						routeWhileDragging: true,
-						showAlternatives: true,
-						show: true,
-						collapsible: true,
-						geocoder: L.Control.Geocoder.nominatim(),
-						router: L.Routing.mapbox('pk.eyJ1IjoiZHJvcHBpbmdjaGlrYSIsImEiOiJja2dkdXQ4aTQwbXBqMnJsZXNsNTRqdG53In0.H_xtqAmm1KwWN_vQA7Vb-g')
-					}).addTo(map);
-					
-					map.off('click dblclick mousedown zoomanim contextmenu');
-					map.on('click', function(e) {
-						waypoints = control.getWaypoints();
-						if(waypoints[0].latLng == undefined){
-							control.spliceWaypoints(0, 1, e.latlng);
+			L.easyButton(
+				{
+				states: [{
+					stateName: 'enable',
+					icon:      '<span class="easybutton"><ion-icon name="trail-sign-outline"></ion-icon></span>',
+					title:     'enable routing',
+					onClick: function(btn, map){
+						control = L.Routing.control({
+							autoRoute: true,
+							routeWhileDragging: true,
+							showAlternatives: true,
+							show: true,
+							collapsible: true,
+							geocoder: L.Control.Geocoder.nominatim(),
+							router: L.Routing.mapbox('pk.eyJ1IjoiZHJvcHBpbmdjaGlrYSIsImEiOiJja2dkdXQ4aTQwbXBqMnJsZXNsNTRqdG53In0.H_xtqAmm1KwWN_vQA7Vb-g')
+						}).addTo(map);
+						
+						control.on('routeselected', function(e) {
+							route = e.route;
+						});
+						
+						if(isMobile){
+							control.show() = false;
 						}
-						else if(waypoints[1].latLng == undefined){
-							control.spliceWaypoints(1, 1, e.latlng);
+						
+						map.off('click dblclick mousedown zoomanim contextmenu');
+						map.on('click', function(e) {
+							waypoints = control.getWaypoints();
+							if(waypoints[0].latLng == undefined){
+								control.spliceWaypoints(0, 1, e.latlng);
+							}
+							else if(waypoints[1].latLng == undefined){
+								control.spliceWaypoints(1, 1, e.latlng);
+							}
+							else{
+								control.spliceWaypoints(control.getWaypoints().length, 0, e.latlng);
+							}
+						});
+						btn.state('disable');
+					}
+					},
+					{
+						stateName: 'disable',
+						icon:      '<span class="easybutton"><ion-icon name="trail-sign"></ion-icon></span>',
+						title:     'disable routing',
+						onClick: function(btn, map) {
+							var filename = prompt('Give the filename to store the GPX file');
+							if (filename != null){
+								var geojsons = route.coordinates;
+								var segments = L.layerGroup();
+								for (i = 0; i < geojsons.length - 1; i++) {
+									L.polyline([geojsons[i], geojsons[i+1]]).addTo(segments);
+								}
+								var gpx_file = togpx(segments.toGeoJSON());
+								var blob = new Blob([gpx_file], { type: "text/plain;charset=utf-8" });
+								saveAs(blob, filename + ".gpx");
+							}
+							
+							control.remove();
+							control = undefined;
+							map.off('click');
+							map.on('click dblclick mousedown zoomanim contextmenu', onMapClick);
+							btn.state('enable');
 						}
-						else{
-							control.spliceWaypoints(control.getWaypoints().length, 0, e.latlng);
-						}
-					});
+					}]
 				}
-				else{
-					control.remove();
-					control = undefined;
-					map.off('click');
-					map.on('click dblclick mousedown zoomanim contextmenu', onMapClick);
-				}
-			}, 'enable routing').addTo( map );
+			).addTo( map );
 		}
 
 		</script>
