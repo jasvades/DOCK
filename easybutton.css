@@ -56,3 +56,6 @@
 		  height: 30px;
 		  line-height: 30px;
 		}
+		
+#map .easy-button-button.disabled {
+  height: 0;}

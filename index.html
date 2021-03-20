@@ -250,6 +250,8 @@
 					title:     'enable GPS tracking',
 					onClick: function(btn, map) {
 						location_button.state('relocate');
+						follow_button.state('enable');
+						follow_button.enable();
 						btn.state('disable'); // change state on click!
 						map.locate({
 							setView: false,
@@ -264,6 +266,8 @@
 						onClick: function(btn, map) {
 							btn.state('enable');
 							location_button.state('enable');
+							follow_button.state('hide');
+							follow_button.disable();
 							map.stopLocate();
 														
 							var filename = prompt('Give the filename to store the GPX file');
@@ -283,12 +287,48 @@
 							last_stored_position = null;
 						}
 					}]}
-				).addTo( map );
+				);
+				
+				follow_button = L.easyButton({
+					states: [{
+						stateName: 'hide',
+						icon:      '<p></p>',
+						title:     'hide follow button',
+						onClick: function(btn, map) {}
+						},
+						{
+						stateName: 'enable',
+						icon:      '<span class="easybutton"><ion-icon size="small" name="arrow-redo-outline"></ion-icon></span>',
+						title:     'enable GPS following',
+						onClick: function(btn, map) {
+							btn.state('disable'); // change state on click!
+							map.locate({
+								setView: true,
+								watch: true,
+								enableHighAccuracy: true});
+							map.setZoom(18);
+						}
+						},
+						{
+						stateName: 'disable',
+						icon:      '<span class="easybutton"><ion-icon size="small" name="arrow-redo"></ion-icon></span>',
+						title:     'click to disable GPS following',
+						onClick: function(btn, map) {
+							btn.state('enable');
+							map.locate({
+								setView: false,
+								watch: true,
+								enableHighAccuracy: true});
+						}
+					}]}
+				);
+				follow_button.disable();
+				
+				L.easyBar([ tracking_button, follow_button, ]).addTo( map );	
 			}
-		
-		
-		var measure_control;
-		
+			
+			
+		var measure_control;		
 		function enableMeasure(map){
 			measure_control = L.control.measure({
 				position: 'topleft',
