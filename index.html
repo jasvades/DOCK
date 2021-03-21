@@ -200,8 +200,8 @@
 				}
 				
 				if(follow_button.state() === 'disable'){
-					forward_lat = e.latlng.lat + (e.latlng.lat - (last_stored_position ? last_stored_position.lat : e.latlng.lat));
-					forward_lng = e.latlng.lng + (e.latlng.lng - (last_stored_position ? last_stored_position.lng : e.latlng.lng));
+					forward_lat = e.latlng.lat + 7.5*(e.latlng.lat - (last_stored_position ? last_stored_position.lat : e.latlng.lat));
+					forward_lng = e.latlng.lng + 7.5*(e.latlng.lng - (last_stored_position ? last_stored_position.lng : e.latlng.lng));
 					map.setView(L.latLng(forward_lat, forward_lng));
 				}
 				
