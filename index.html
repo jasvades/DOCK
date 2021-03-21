@@ -200,13 +200,16 @@
 				}
 				
 				if(follow_button.state() === 'disable'){
+					alert(last_stored_position);
+					alert(last_stored_position ? 1 : 0);
 					forward_lat = e.latlng.lat + (e.latlng.lat - (last_stored_position ? last_stored_position.lat : e.latlng.lat));
 					forward_lng = e.latlng.lng + (e.latlng.lng - (last_stored_position ? last_stored_position.lng : e.latlng.lng));
 					map.setView(L.LatLng(forward_lat, forward_lng));
 				}
 				
 				my_location
-				.setLatLng(e.latlng);
+				.setLatLng(e.latlng)
+				.bindPopup("Je bent maximaal " + Math.round(e.accuracy) + " meter van dit punt");
 				
 				my_location_radius
 				.setLatLng(e.latlng)
