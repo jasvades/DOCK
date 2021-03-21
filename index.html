@@ -204,11 +204,8 @@
 						Math.pow((e.latlng.lat - (last_stored_position ? last_stored_position.lat : e.latlng.lat)), 2) + 
 						Math.pow((e.latlng.lng - (last_stored_position ? last_stored_position.lng : e.latlng.lng)), 2)) : 1.0;
 					
-					forward_lat = e.latlng.lat + (75.0 / normalize) * (e.latlng.lat - (last_stored_position ? last_stored_position.lat : e.latlng.lat));
-					forward_lng = e.latlng.lng + (75.0 / normalize) * (e.latlng.lng - (last_stored_position ? last_stored_position.lng : e.latlng.lng));
-					alert(normalize);
-					alert(forward_lat);
-					alert(forward_lng);
+					forward_lat = e.latlng.lat + (75.0 / (111.111 * normalize)) * (e.latlng.lat - (last_stored_position ? last_stored_position.lat : e.latlng.lat));
+					forward_lng = e.latlng.lng + (75.0 / (111.111 * normalize)) * (e.latlng.lng - (last_stored_position ? last_stored_position.lng : e.latlng.lng));
 					map.setView(L.latLng(forward_lat, forward_lng));
 				}
 				
