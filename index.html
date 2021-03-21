@@ -198,6 +198,13 @@
 						last_stored_position = my_location.getLatLng();
 					}
 				}
+				
+				if(follow_button.state() == 'enable'){
+					forward_lat = e.latlng.lat + (e.latlng.lat - (last_stored_position ? last_stored_position.lat : e.latlng.lat));
+					forward_lng = e.latlng.lng + (e.latlng.lng - (last_stored_position ? last_stored_position.lng : e.latlng.lng));
+					map.setView(L.LatLng(forward_lat, forward_lng));
+				}
+				
 				my_location
 				.setLatLng(e.latlng)
 				.bindPopup("Je bent maximaal " + Math.round(e.accuracy) + " meter van dit punt");
@@ -302,11 +309,7 @@
 						title:     'enable GPS following',
 						onClick: function(btn, map) {
 							btn.state('disable'); // change state on click!
-							map.locate({
-								setView: true,
-								watch: true,
-								enableHighAccuracy: true});
-							map.setZoom(18);
+							map.setZoom(17);
 						}
 						},
 						{
@@ -315,11 +318,6 @@
 						title:     'click to disable GPS following',
 						onClick: function(btn, map) {
 							btn.state('enable');
-							map.locate({
-								setView: false,
-								watch: true,
-								enableHighAccuracy: true});
-						}
 					}]}
 				);
 				follow_button.disable();
