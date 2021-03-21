@@ -228,22 +228,54 @@
 					icon:      '<span class="easybutton"><ion-icon size="small" name="navigate-outline"></ion-icon></span>',
 					title:     'enable GPS location',
 					onClick: function(btn, map) {
-						btn.state('relocate'); // change state on click!
+						btn.state('disable'); // change state on click!
+						relocate_button.enable();
+						relocate_button.state('relocate');
 						map.locate({
 							setView: false,
 							watch: true,
-							enableHighAccuracy: true});  
-					}
+							enableHighAccuracy: true});
+						}
 					},
 					{
-						stateName: 'relocate',
+						stateName: 'disable',
 						icon:      '<span class="easybutton"><ion-icon size="small" name="navigate"></ion-icon></span>',
+						title:     'click to disable GPS location',
+						onClick: function(btn, map) {
+							btn.state('enable');
+							relocate_button.state('hide');
+							relocate_button.disable();
+							map.stopLocate();
+							
+							map.removeLayer(my_location);
+							map.removeLayer(my_location_radius);
+							
+							my_location = null;
+							my_location_radius = null;
+						}
+					}]}
+				);
+				
+				relocate_button = L.easyButton({
+					states: [{
+						stateName: 'hide',
+						icon:      '<p></p>',
+						title:     'hide relocate button',
+						onClick: function(btn, map) {}
+						},
+						{
+						stateName: 'relocate',
+						icon:      '<span class="easybutton"><ion-icon size="contracts-outline" name="contract-outline"></ion-icon></span>',
 						title:     'click to relocate current position',
 						onClick: function(btn, map) {
 							map.setView(my_location.getLatLng());
+							}
 						}
-					}]}
-				).addTo( map );
+					]}
+				);
+				relocate_button.disable();
+				
+				L.easyBar([ location_button, relocate_button, ]).addTo( map );
 			}
 		
 		
@@ -256,7 +288,7 @@
 					icon:      '<span class="easybutton"><ion-icon size="small" name="eye-outline"></ion-icon></span>',
 					title:     'enable GPS tracking',
 					onClick: function(btn, map) {
-						location_button.state('relocate');
+						location_button.state('disable');
 						follow_button.state('enable');
 						follow_button.enable();
 						btn.state('disable'); // change state on click!
@@ -264,7 +296,7 @@
 							setView: false,
 							watch: true,
 							enableHighAccuracy: true});
-					}
+						}
 					},
 					{
 						stateName: 'disable',
@@ -310,7 +342,7 @@
 						onClick: function(btn, map) {
 							btn.state('disable'); // change state on click!
 							map.setZoom(17);
-						}
+							}
 						},
 						{
 						stateName: 'disable',
@@ -318,7 +350,9 @@
 						title:     'click to disable GPS following',
 						onClick: function(btn, map) {
 							btn.state('enable');
-					}]}
+						}	
+					}
+				]}
 				);
 				follow_button.disable();
 				
