@@ -201,9 +201,11 @@
 				
 				if(follow_button.state() === 'disable'){
 					alert(last_stored_position);
-					alert(last_stored_position ? 1 : 0);
+					alert(last_stored_position.lat);
+					alert(e.latlng.lat);
 					forward_lat = e.latlng.lat + (e.latlng.lat - (last_stored_position ? last_stored_position.lat : e.latlng.lat));
 					forward_lng = e.latlng.lng + (e.latlng.lng - (last_stored_position ? last_stored_position.lng : e.latlng.lng));
+					alert(forward_lat);
 					map.setView(L.LatLng(forward_lat, forward_lng));
 				}
 				
