@@ -653,6 +653,7 @@
 		
 		var control;
 		var route;
+		var routing_control;
 		function enableRouter(map) {
 			L.easyButton(
 				{
@@ -661,6 +662,26 @@
 					icon:      '<span class="easybutton"><ion-icon name="trail-sign-outline"></ion-icon></span>',
 					title:     'enable routing',
 					onClick: function(btn, map){
+						var routing_profiles = {
+							"walking": L.layerGroup([]),
+							"cycling": L.layerGroup([]),
+							"driving": L.layerGroup([]),
+							"driving-traffic": L.layerGroup([])						
+						};
+						
+						for(var key in routing_profiles) {
+						  routing_profiles[key].layerID = key;
+						}
+						
+						routing_control = L.control.layers(routing_profiles).addTo(map);
+						map.on('baselayerchange', function (e) {
+							if(e.layer.layerID){
+								control._router = L.Routing.mapbox(
+								'pk.eyJ1IjoiZHJvcHBpbmdjaGlrYSIsImEiOiJja2dkdXQ4aTQwbXBqMnJsZXNsNTRqdG53In0.H_xtqAmm1KwWN_vQA7Vb-g',
+								{profile: "mapbox/" + e.layer.layerID});
+							}
+						});
+						
 						control = L.Routing.control({
 							autoRoute: true,
 							routeWhileDragging: true,
@@ -715,6 +736,7 @@
 							}
 							
 							control.remove();
+							routing_control.remove();
 							control = undefined;
 							map.off('click');
 							map.on('click dblclick mousedown zoomanim contextmenu', onMapClick);
