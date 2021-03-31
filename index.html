@@ -679,6 +679,7 @@
 								control._router = L.Routing.mapbox(
 								'pk.eyJ1IjoiZHJvcHBpbmdjaGlrYSIsImEiOiJja2dkdXQ4aTQwbXBqMnJsZXNsNTRqdG53In0.H_xtqAmm1KwWN_vQA7Vb-g',
 								{profile: "mapbox/" + e.layer.layerID});
+								control.route();
 							}
 						});
 						
@@ -693,6 +694,10 @@
 								'pk.eyJ1IjoiZHJvcHBpbmdjaGlrYSIsImEiOiJja2dkdXQ4aTQwbXBqMnJsZXNsNTRqdG53In0.H_xtqAmm1KwWN_vQA7Vb-g',
 								{profile: 'mapbox/walking'})
 						}).addTo(map);
+						
+						if(location_button.state() === 'disable'){
+							control.spliceWaypoints(0, 1, my_location.getLatLng());
+						}
 						
 						control.on('routeselected', function(e) {
 							route = e.route;
