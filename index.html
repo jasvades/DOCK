@@ -93,28 +93,39 @@
 			
 			//https://leaflet-extras.github.io/leaflet-providers/preview/
 			
-			tileURLs['thunderforest - landscape'] = 'https://tile.thunderforest.com/landscape/{z}/{x}/{y}{r}.png?apikey=f3489ae724f24f8596a74bac7100dabd';
-			tileURLs['mapbox - streets'] = 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}';
-			tileURLs['mapbox - satellite'] = 'https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/{z}/{x}/{y}?access_token={accessToken}';
-			tileURLs['mapbox - satellite&streets'] = 'https://api.mapbox.com/styles/v1/mapbox/satellite-streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}';
-			tileURLs['openstreetmap - classic'] = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+			tileURLs['OpenStreetMap - classic'] = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 			tileURLs['OpenTopoMap'] = 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png';
+			tileURLs['ThunderForest - landscape'] = 'https://tile.thunderforest.com/landscape/{z}/{x}/{y}{r}.png?apikey=f3489ae724f24f8596a74bac7100dabd';
 			tileURLs['ESRI - satellite'] = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
-			
+			tileURLs['Google - satellite'] = 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}';
+			tileURLs['Mapbox - satellite'] = 'https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/{z}/{x}/{y}?access_token={accessToken}';
+			tileURLs['Mapbox - streets'] = 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}';
+			tileURLs['Ferrariskaart'] = 'https://tile.informatievlaanderen.be/ws/raadpleegdiensten/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&LAYER=ferraris&STYLE=&FORMAT=image/png&TILEMATRIXSET=GoogleMapsVL&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}';
+			tileURLs['NGI stafkaart'] = 'https://www.ngi.be/tiles/arcgis/rest/services/cartoweb__topo__default__3857__latest/MapServer/tile/{z}/{y}/{x}';
+				
 			tileLayers = new Array();
 			
 			for (var tile_key in Object.keys(tileURLs)) {
 				tileLayers[Object.keys(tileURLs)[tile_key]] = L.tileLayer(tileURLs[Object.keys(tileURLs)[tile_key]], {
-					attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>' + 'Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+					attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>' +
+					' <a href="https://www.mapbox.com/">Mapbox</a>' +
+					' <a href="https://www.google.com/">Google</a>',
 					accessToken: 'pk.eyJ1IjoiZHJvcHBpbmdjaGlrYSIsImEiOiJja2dkdXQ4aTQwbXBqMnJsZXNsNTRqdG53In0.H_xtqAmm1KwWN_vQA7Vb-g',
 					maxNativeZoom:19,
 					maxZoom:19
 				});
 			}
 
-			tileLayers['openstreetmap - classic'].addTo(map);
+			tileLayers['OpenStreetMap - classic'].addTo(map);
 			
-			L.control.layers(tileLayers).addTo(map);
+			overlayLayers = new Array();
+			
+			overlayLayers['RouteYou'] = L.tileLayer('https://tiles.routeyou.com/overlay/m/64/{z}/{x}/{y}.png');
+			overlayLayers['Fietsknooppunten'] = L.tileLayer('https://tile.openstreetmap.nl/openfietskaart-rcn/{z}/{x}/{y}.png');
+			overlayLayers['LF-fietsroutes'] = L.tileLayer('https://tile.openstreetmap.nl/openfietskaart-ncn/{z}/{x}/{y}.png');
+			overlayLayers['GR-routes & Wandelknooppunten'] = L.tileLayer('https://tile.openstreetmap.nl/openwandelkaart-overlay/{z}/{x}/{y}.png');
+			
+			L.control.layers(tileLayers, overlayLayers).addTo(map);
 			L.control.scale().addTo(map);
 			L.control.zoom({
 				fontSize: '18px',
