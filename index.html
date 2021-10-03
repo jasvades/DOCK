@@ -517,7 +517,7 @@
 			var tochtGroepen = new Array();
 			var tochtControl = new L.control.layers(tochtGroepen,null, {collapsed:false}).addTo(map);
 			
-			realtime.on('update', function() {
+			realtime.on('update', function(e) {
 				var bounds;						
 				
 				tochtControl.remove(map);
@@ -549,6 +549,11 @@
 				if(now - idleTime > 10000){
 					map.fitBounds(bounds);
 				}
+
+				Object.keys(e.update).forEach(function(id) {
+					var feature = e.update[id];
+					this.getLayer(id).bindPopup('<b>' + feature.properties.label_2 + '</b>' + '<br />' + feature.properties.label_3);
+				}.bind(this));
 			});
 			
 			return realtime;
