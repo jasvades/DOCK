@@ -7,10 +7,16 @@
 			height:100%;
 			width:100vw;
 			padding:0px;
-			margin:0px;
+			margin:-8px;
 		}
+		
+		#elevation-div {
+			height: 0%;
+			font: 12px/1.5 "Helvetica Neue", Arial, Helvetica, sans-serif;
+		}
+		
 		@keyframes fade { 
-			from { opacity: 0.25; } 
+			from { opacity: 0.25;} 
 		}
 
 		.blinking {
@@ -18,773 +24,933 @@
 		}
 		
 		.dot {
-		  height: 1em;
-		  width: 1em;
-		  border-radius: 50%;
-		  display: inline-block;
+			height: 1em;
+			width: 1em;
+			border-radius: 50%;
+			display: inline-block;
 		}
 		</style>
 
-	<!-- ensure mobile compatibility -->	
-	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+		<!-- ensure mobile compatibility -->	
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 		
-	<!-- load leaflet API -->
-	<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-	integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="crossorigin=""/>
-	<link rel="stylesheet" href="Control.Geocoder.css" />
-	<link rel="stylesheet" href="tooltip.css"/>
-	<link rel="stylesheet" href="easybutton.css" />
+		<!-- load leaflet API -->
+		<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+		integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="crossorigin=""/>
+		<link rel="stylesheet" href="Control.Geocoder.css" />
+		<link rel="stylesheet" href="tooltip.css"/>
+		<link rel="stylesheet" href="easybutton.css" />
 		
-	<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-	integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="crossorigin="">
-	</script>
+		<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+		integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="crossorigin="">
+		</script>
 
-	<!-- load leaflet extensions -->
-	<script src="leaflet-realtime.js"></script>
-    <script src="gpx.min.js"></script> <!-- load leaflet-gpx -->
-    <script src="leaflet.measure.js"></script>
-    <script src="easy-button.js"></script>
-    <script src='togpx.js'></script>
-    <script src="FileSaver.js"></script>
-	<script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
-    <script src="all.js"></script>
-	<link rel="stylesheet" href="leaflet-routing-machine-3.2.12/dist/leaflet-routing-machine.css" />
-	<script src="leaflet-routing-machine-3.2.12/dist/leaflet-routing-machine.js"></script>
-	<script src="Control.Geocoder.js"></script>
+		<!-- load leaflet extensions -->
+		<script src="leaflet-realtime.js"></script>
+		<script src="gpx.min.js"></script> <!-- load leaflet-gpx -->
+		<script src="leaflet.measure.js"></script>
+		<script src="easy-button.js"></script>
+		<script src='togpx.js'></script>
+		<script src="FileSaver.js"></script>
+		<script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
+		<script src="all.js"></script>
+		<link rel="stylesheet" href="leaflet-routing-machine-3.2.12/dist/leaflet-routing-machine.css" />
+		<script src="leaflet-routing-machine-3.2.12/dist/leaflet-routing-machine.js"></script>
+		<script src="Control.Geocoder.js"></script>
+		<link rel="stylesheet" href="leaflet-elevation-master/leaflet-elevation.css" />
+		<script src="leaflet-elevation-master/leaflet-elevation.js"></script>
+		<script src="togeojson.js"></script>
 	
-	<!-- load google API -->
-	<script src="https://apis.google.com/js/api.js"></script>
+		<!-- load google API -->
+		<script src="https://apis.google.com/js/api.js"></script>
 
-	<!-- load jQuery -->
-	<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+		<!-- load jQuery -->
+		<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 	
-	<!-- load supporting functions -->    
-	<div id="map"></div>
-	<div id="geocode-selector"></div>
+		<!-- load supporting functions -->    
+		<div id="map"></div>
+		<div id="geocode-selector"></div>
 	
-	<script>
-		var map;
-		var isMobile = (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
-		
-		<!-- set mobile settings -->
-		if(isMobile){
-			map_div = document.getElementById("map")
-			map_div.style.setProperty('-webkit-touch-callout', 'none');
-			map_div.style.setProperty('-webkit-user-select', 'none');
-			map_div.style.setProperty('-ms-user-select', 'none');
-			map_div.style.setProperty('user-select', 'none');
-		}
-		
-		<!-- alert script errors -->
-		window.onerror=function(msg, url, linenumber){
-			if(! isMobile){
-				alert('Error message: '+msg+'\nURL: '+url+'\nLine Number: '+linenumber)
+		<script>
+			var map;
+			var isMobile = (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent));
+			var sleutel = 'pk.eyJ1IjoiZHJvcHBpbmdjaGlrYSIsImEiOiJja2dkdXQ4aTQwbXBqMnJsZXNsNTRqdG53In0.H_xtqAmm1KwWN_vQA7Vb-g';
+			<!-- set mobile settings -->
+			if(isMobile){
+				map_div = document.getElementById("map")
+				map_div.style.setProperty('-webkit-touch-callout', 'none');
+				map_div.style.setProperty('-webkit-user-select', 'none');
+				map_div.style.setProperty('-ms-user-select', 'none');
+				map_div.style.setProperty('user-select', 'none');
 			}
-			return true
-		}
+		
+			<!-- alert script errors -->
+			window.onerror=function(msg, url, linenumber){
+				if(! isMobile){
+					alert('Error message: '+msg+'\nURL: '+url+'\nLine Number: '+linenumber)
+				}
+				return true
+			}
 		
 
-		var tileLayers;
+			var tileLayers;
 				
-		function initialiseMap() {
-			var map = L.map('map', {closePopupOnClick: false, zoomControl: false}).fitWorld();
+			function initialiseMap() {
+				var map = L.map('map', {closePopupOnClick: false, zoomControl: false}).fitWorld();
 			
-			var tileURLs = new Array();
+				var tileURLs = new Array();
 			
-			//https://leaflet-extras.github.io/leaflet-providers/preview/
+				//https://leaflet-extras.github.io/leaflet-providers/preview/
 			
-			tileURLs['OpenStreetMap - classic'] = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-			tileURLs['OpenTopoMap'] = 'https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png';
-			tileURLs['ThunderForest - landscape'] = 'https://tile.thunderforest.com/landscape/{z}/{x}/{y}{r}.png?apikey=f3489ae724f24f8596a74bac7100dabd';
-			tileURLs['ESRI - satellite'] = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
-			tileURLs['Google - satellite'] = 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}';
-			tileURLs['Mapbox - satellite'] = 'https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/{z}/{x}/{y}?access_token={accessToken}';
-			tileURLs['Mapbox - streets'] = 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}';
-			tileURLs['Ferrariskaart'] = 'https://tile.informatievlaanderen.be/ws/raadpleegdiensten/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&LAYER=ferraris&STYLE=&FORMAT=image/png&TILEMATRIXSET=GoogleMapsVL&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}';
-			tileURLs['NGI stafkaart'] = 'https://www.ngi.be/tiles/arcgis/rest/services/cartoweb__topo__default__3857__latest/MapServer/tile/{z}/{y}/{x}';
+				tileURLs['OpenStreetMap - classic'] = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+				tileURLs['ThunderForest - landscape'] = 'https://tile.thunderforest.com/landscape/{z}/{x}/{y}{r}.png?apikey=f3489ae724f24f8596a74bac7100dabd';
+				tileURLs['ESRI - satellite'] = 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}';
+				tileURLs['Google - satellite'] = 'https://mt1.google.com/vt/lyrs=s&x={x}&y={y}&z={z}';
+				tileURLs['Mapbox - satellite'] = 'https://api.mapbox.com/styles/v1/mapbox/satellite-v9/tiles/{z}/{x}/{y}?access_token={accessToken}';
+				tileURLs['Mapbox - streets'] = 'https://api.mapbox.com/styles/v1/mapbox/streets-v11/tiles/{z}/{x}/{y}?access_token={accessToken}';
+				tileURLs['Ferrariskaart'] = 'https://tile.informatievlaanderen.be/ws/raadpleegdiensten/wmts?SERVICE=WMTS&VERSION=1.0.0&REQUEST=GetTile&LAYER=ferraris&STYLE=&FORMAT=image/png&TILEMATRIXSET=GoogleMapsVL&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}';
+				tileURLs['NGI stafkaart'] = 'https://www.ngi.be/tiles/arcgis/rest/services/cartoweb__topo__default__3857__latest/MapServer/tile/{z}/{y}/{x}';
 				
-			tileLayers = new Array();
+				tileLayers = new Array();
 			
-			for (var tile_key in Object.keys(tileURLs)) {
-				tileLayers[Object.keys(tileURLs)[tile_key]] = L.tileLayer(tileURLs[Object.keys(tileURLs)[tile_key]], {
-					attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>' +
-					' <a href="https://www.mapbox.com/">Mapbox</a>' +
-					' <a href="https://www.google.com/">Google</a>',
-					accessToken: 'pk.eyJ1IjoiZHJvcHBpbmdjaGlrYSIsImEiOiJja2dkdXQ4aTQwbXBqMnJsZXNsNTRqdG53In0.H_xtqAmm1KwWN_vQA7Vb-g',
-					maxNativeZoom:19,
-					maxZoom:19
+				for (var tile_key in Object.keys(tileURLs)) {
+					tileLayers[Object.keys(tileURLs)[tile_key]] = L.tileLayer(tileURLs[Object.keys(tileURLs)[tile_key]], {
+						attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>' +
+						' <a href="https://www.mapbox.com/">Mapbox</a>' +
+						' <a href="https://www.google.com/">Google</a>',
+						accessToken: sleutel,
+						maxNativeZoom:19,
+						maxZoom:19
+					});
+				}
+
+				tileLayers['OpenStreetMap - classic'].addTo(map);
+			
+				overlayLayers = new Array();
+			
+				overlayLayers['RouteYou'] = L.tileLayer('https://tiles.routeyou.com/overlay/m/64/{z}/{x}/{y}.png');
+				overlayLayers['Fietsknooppunten'] = L.tileLayer('https://tile.openstreetmap.nl/openfietskaart-rcn/{z}/{x}/{y}.png');
+				overlayLayers['LF-fietsroutes'] = L.tileLayer('https://tile.openstreetmap.nl/openfietskaart-ncn/{z}/{x}/{y}.png');
+				overlayLayers['GR-routes & Wandelknooppunten'] = L.tileLayer('https://tile.openstreetmap.nl/openwandelkaart-overlay/{z}/{x}/{y}.png');
+			
+				L.control.layers(tileLayers, overlayLayers).addTo(map);
+				L.control.scale().addTo(map);
+				L.control.zoom({
+					fontSize: '18px',
+					height: '1.65em',
+					width: '1.65em'
+				}).addTo(map);
+			
+				return map;					
+			}
+
+			<!-- coordinates pop-up -->
+			var popup = L.popup();
+			var idleTime;
+		
+			function onMapClick(event) {
+				if (measure_control._measuring) {
+					return
+				}
+			
+				var popupOpen = false;
+				var today = new Date;
+				idleTime = today.getTime();
+			
+				map.eachLayer(function(layer) {
+					if(layer instanceof L.Marker) {
+						if(layer.isPopupOpen()){
+							layer.closePopup();
+							popupOpen = true;
+						}
+					}	
 				});
-			}
-
-			tileLayers['OpenStreetMap - classic'].addTo(map);
 			
-			overlayLayers = new Array();
-			
-			overlayLayers['RouteYou'] = L.tileLayer('https://tiles.routeyou.com/overlay/m/64/{z}/{x}/{y}.png');
-			overlayLayers['Fietsknooppunten'] = L.tileLayer('https://tile.openstreetmap.nl/openfietskaart-rcn/{z}/{x}/{y}.png');
-			overlayLayers['LF-fietsroutes'] = L.tileLayer('https://tile.openstreetmap.nl/openfietskaart-ncn/{z}/{x}/{y}.png');
-			overlayLayers['GR-routes & Wandelknooppunten'] = L.tileLayer('https://tile.openstreetmap.nl/openwandelkaart-overlay/{z}/{x}/{y}.png');
-			
-			L.control.layers(tileLayers, overlayLayers).addTo(map);
-			L.control.scale().addTo(map);
-			L.control.zoom({
-				fontSize: '18px',
-				height: '1.65em',
-				width: '1.65em'
-			}).addTo(map);
-			
-			return map;					
-		}
-
-		<!-- coordinates pop-up -->
-		var popup = L.popup();
-		var idleTime;
-		
-		function onMapClick(event) {
-			if (measure_control._measuring) {
-				return
-			}
-			
-			var popupOpen = false;
-			var today = new Date;
-			idleTime = today.getTime();
-			
-			map.eachLayer(function(layer) {
-				if(layer instanceof L.Marker) {
-					if(layer.isPopupOpen()){
-						layer.closePopup();
-						popupOpen = true;
-					}
-				}	
-			});
-			
-			if (popup.isOpen() && event.type === 'mousedown'){
-				popup.remove();
-				popupOpen = true;	
-			}
-			else if (! popupOpen && event.type === 'mousedown' && ! isMobile){
-				popup
-				.setLatLng(event.latlng)
-				.setContent("De coördinaten van dit punt zijn: " + event.latlng.toString().substring(6))
-				.openOn(this);
-			}
-			else if (! popupOpen && event.type === 'contextmenu' && isMobile){
-				event.preventDefault;
-				popup
-				.setLatLng(event.latlng)
-				.setContent("De coördinaten van dit punt zijn: " + event.latlng.toString().substring(6))
-				.openOn(this);
-			}
-		}
-		
-		
-		var my_location = null;
-		var last_stored_position = null;
-		var my_location_radius = null;						
-		var location_button;
-		var tracking_button;
-		function onLocationFound(e) {			
-			if(my_location === null &&
-				location_button.state() !== 'enable'
-			){
-				my_location = L.marker(e.latlng).addTo(map)
-				.bindPopup("Je bent maximaal " + Math.round(e.accuracy) + " meter van dit punt").openPopup();
-
-				my_location_radius = L.circle(e.latlng, e.accuracy).addTo(map);
-				map.setZoom(16);
-				map.setView(e.latlng);
-			}
-			else{
-				if(tracking_button.state() !== 'enable'){
-					if(last_stored_position === null &&
-						e.accuracy < 100.0
-					){
-						last_stored_position = e.latlng;
-					}
-					else if(e.accuracy < 100.0 &&
-						(map.distance(last_stored_position, e.latlng) > 10.0 + e.accuracy)
-					){
-						hist_segments.addLayer(new L.polyline([last_stored_position, e.latlng]));
-						hist_locations.addLayer(new L.circle(last_stored_position, 5.0, {opacity: 0.5, fillOpacity: 0.5, fill: true}).addTo(map));
-						last_stored_position = e.latlng;
-					}
+				if (popup.isOpen() && event.type === 'mousedown'){
+					popup.remove();
+					popupOpen = true;	
 				}
+				else if (! popupOpen && event.type === 'mousedown' && ! isMobile){
+					popup
+					.setLatLng(event.latlng)
+					.setContent("De coördinaten van dit punt zijn: " + event.latlng.toString().substring(6))
+					.openOn(this);
+				}
+				else if (! popupOpen && event.type === 'contextmenu' && isMobile){
+					event.preventDefault;
+					popup
+					.setLatLng(event.latlng)
+					.setContent("De coördinaten van dit punt zijn: " + event.latlng.toString().substring(6))
+					.openOn(this);
+				}
+			}
+		
+		
+			var my_location = null;
+			var last_stored_position = null;
+			var my_location_radius = null;						
+			var location_button;
+			var tracking_button;
+			function onLocationFound(e) {			
+				if(my_location === null &&
+					location_button.state() !== 'enable'
+				){
+					my_location = L.marker(e.latlng).addTo(map)
+					.bindPopup("Je bent maximaal " + Math.round(e.accuracy) + " meter van dit punt").openPopup();
+
+					my_location_radius = L.circle(e.latlng, e.accuracy).addTo(map);
+					map.setZoom(16);
+					map.setView(e.latlng);
+				}
+				else{
+					if(tracking_button.state() !== 'enable'){
+						if(last_stored_position === null &&
+							e.accuracy < 100.0
+						){
+							last_stored_position = e.latlng;
+						}
+						else if(e.accuracy < 100.0 &&
+							(map.distance(last_stored_position, e.latlng) > 10.0 + e.accuracy)
+						){
+							hist_segments.addLayer(new L.polyline([last_stored_position, e.latlng]));
+							hist_locations.addLayer(new L.circle(last_stored_position, 5.0, {opacity: 0.5, fillOpacity: 0.5, fill: true}).addTo(map));
+							last_stored_position = e.latlng;
+						}
+					}
 				
-				if(follow_button.state() === 'disable'){
-					normalize = last_stored_position ? Math.sqrt(
-						Math.pow((e.latlng.lat - (last_stored_position ? last_stored_position.lat : e.latlng.lat)), 2) + 
-						Math.pow((e.latlng.lng - (last_stored_position ? last_stored_position.lng : e.latlng.lng)), 2)) : 1.0;
+					if(follow_button.state() === 'disable'){
+						normalize = last_stored_position ? Math.sqrt(
+							Math.pow((e.latlng.lat - (last_stored_position ? last_stored_position.lat : e.latlng.lat)), 2) + 
+							Math.pow((e.latlng.lng - (last_stored_position ? last_stored_position.lng : e.latlng.lng)), 2)) : 1.0;
 					
-					forward_lat = e.latlng.lat + (75.0 / (111111.0 * normalize)) * (e.latlng.lat - (last_stored_position ? last_stored_position.lat : e.latlng.lat));
-					forward_lng = e.latlng.lng + (75.0 / (111111.0 * Math.cos(e.latlng.lat) * normalize)) * (e.latlng.lng - (last_stored_position ? last_stored_position.lng : e.latlng.lng));
-					map.setView(L.latLng(forward_lat, forward_lng));
+							forward_lat = e.latlng.lat + (75.0 / (111111.0 * normalize)) * (e.latlng.lat - (last_stored_position ? last_stored_position.lat : e.latlng.lat));
+							forward_lng = e.latlng.lng + (75.0 / (111111.0 * Math.cos(e.latlng.lat) * normalize)) * (e.latlng.lng - (last_stored_position ? last_stored_position.lng : e.latlng.lng));
+							map.setView(L.latLng(forward_lat, forward_lng));
+						}
+				
+						my_location
+						.setLatLng(e.latlng)
+						.bindPopup("Je bent maximaal " + Math.round(e.accuracy) + " meter van dit punt");
+				
+						my_location_radius
+						.setLatLng(e.latlng)
+						.setRadius(e.accuracy);
+					}
 				}
-				
-				my_location
-				.setLatLng(e.latlng)
-				.bindPopup("Je bent maximaal " + Math.round(e.accuracy) + " meter van dit punt");
-				
-				my_location_radius
-				.setLatLng(e.latlng)
-				.setRadius(e.accuracy);
-			}
-		}
 
 		
-		function onLocationError(e) {
-			alert(e.message);
-		}
+				function onLocationError(e) {
+					alert(e.message);
+				}
 		
 		
-		function enableLocationTracking(map){
-			location_button = L.easyButton({
-				states: [{
-					stateName: 'enable',
-					icon:      '<span class="easybutton"><ion-icon size="small" name="navigate-outline"></ion-icon></span>',
-					title:     'enable GPS location',
-					onClick: function(btn, map) {
-						btn.state('disable'); // change state on click!
-						relocate_button.enable();
-						relocate_button.state('relocate');
-						map.locate({
-							setView: false,
-							watch: true,
-							enableHighAccuracy: true});
-						}
-					},
-					{
-						stateName: 'disable',
-						icon:      '<span class="easybutton"><ion-icon size="small" name="navigate"></ion-icon></span>',
-						title:     'click to disable GPS location',
-						onClick: function(btn, map) {
-							btn.state('enable');
-							relocate_button.state('hide');
-							relocate_button.disable();
-							map.stopLocate();
-							
-							map.removeLayer(my_location);
-							map.removeLayer(my_location_radius);
-							
-							my_location = null;
-							my_location_radius = null;
-						}
-					}]}
-				);
-				
-				relocate_button = L.easyButton({
-					states: [{
-						stateName: 'hide',
-						icon:      '<p></p>',
-						title:     'hide relocate button',
-						onClick: function(btn, map) {}
-						},
-						{
-						stateName: 'relocate',
-						icon:      '<span class="easybutton"><ion-icon size="contracts-outline" name="contract-outline"></ion-icon></span>',
-						title:     'click to relocate current position',
-						onClick: function(btn, map) {
-							map.setView(my_location.getLatLng());
+				function baseLayerChange(e) {
+					if(Elevationgroup.hasLayer(e.layer)) {
+						controlElevation.clear();
+						var xml  = (new DOMParser()).parseFromString(e.layer.className, "text/xml");
+						var geojson = toGeoJSON.gpx(xml);
+						var route = L.geoJson(geojson,{filter: feature => feature.geometry.type != "Point",});
+						route.getLayers().forEach(function(layer) {
+							if (layer instanceof L.Polyline) {
+								controlElevation.addData(layer, false);
+								layer.bringToFront();
 							}
-						}
-					]}
-				);
-				relocate_button.disable();
+						});
+					};
+					if(e.layer.layerID && routing_button.state() === 'disable'){
+						control._router = L.Routing.mapbox(
+							sleutel,
+							{profile: "mapbox/" + e.layer.layerID});
+							control.route();
+						};
+					}
+		
+		
+					function enableLocationTracking(map){
+						location_button = L.easyButton({
+							states: [{
+								stateName: 'enable',
+								icon:      '<span class="easybutton"><ion-icon size="small" name="navigate-outline"></ion-icon></span>',
+								title:     'enable GPS location',
+								onClick: function(btn, map) {
+									btn.state('disable'); // change state on click!
+									relocate_button.enable();
+									relocate_button.state('relocate');
+									map.locate({
+										setView: false,
+										watch: true,
+										enableHighAccuracy: true});
+									}
+								},
+								{
+									stateName: 'disable',
+									icon:      '<span class="easybutton"><ion-icon size="small" name="navigate"></ion-icon></span>',
+									title:     'click to disable GPS location',
+									onClick: function(btn, map) {
+										btn.state('enable');
+										relocate_button.state('hide');
+										relocate_button.disable();
+										map.stopLocate();
+							
+										map.removeLayer(my_location);
+										map.removeLayer(my_location_radius);
+							
+										my_location = null;
+										my_location_radius = null;
+									}
+								}]}
+							);
 				
-				L.easyBar([ location_button, relocate_button, ]).addTo( map );
-			}
+							relocate_button = L.easyButton({
+								states: [{
+									stateName: 'hide',
+									icon:      '<p></p>',
+									title:     'hide relocate button',
+									onClick: function(btn, map) {}
+								},
+								{
+									stateName: 'relocate',
+									icon:      '<span class="easybutton"><ion-icon size="contracts-outline" name="contract-outline"></ion-icon></span>',
+									title:     'click to relocate current position',
+									onClick: function(btn, map) {
+										map.setView(my_location.getLatLng());
+									}
+								}
+							]}
+						);
+						relocate_button.disable();
+				
+						L.easyBar([ location_button, relocate_button, ]).addTo( map );
+					}
 		
 		
-		var hist_segments = new L.layerGroup();
-		var hist_locations = new L.layerGroup();
-		function enableHistoryLocationTracking(map){
-			tracking_button = L.easyButton({
-				states: [{
-					stateName: 'enable',
-					icon:      '<span class="easybutton"><ion-icon size="small" name="eye-outline"></ion-icon></span>',
-					title:     'enable GPS tracking',
-					onClick: function(btn, map) {
-						location_button.state('disable');
-						follow_button.state('enable');
-						follow_button.enable();
-						btn.state('disable'); // change state on click!
-						map.locate({
-							setView: false,
-							watch: true,
-							enableHighAccuracy: true});
-						}
-					},
-					{
-						stateName: 'disable',
-						icon:      '<span class="easybutton"><ion-icon size="small" name="eye-off-outline"></ion-icon></span>',
-						title:     'click to disable tracking and save track',
-						onClick: function(btn, map) {
-							btn.state('enable');
-							location_button.state('enable');
-							follow_button.state('hide');
-							follow_button.disable();
-							map.stopLocate();
+					var hist_segments = new L.layerGroup();
+					var hist_locations = new L.layerGroup();
+					function enableHistoryLocationTracking(map){
+						tracking_button = L.easyButton({
+							states: [{
+								stateName: 'enable',
+								icon:      '<span class="easybutton"><ion-icon size="small" name="eye-outline"></ion-icon></span>',
+								title:     'enable GPS tracking',
+								onClick: function(btn, map) {
+									location_button.state('disable');
+									follow_button.state('enable');
+									follow_button.enable();
+									btn.state('disable'); // change state on click!
+									map.locate({
+										setView: false,
+										watch: true,
+										enableHighAccuracy: true});
+									}
+								},
+								{
+									stateName: 'disable',
+									icon:      '<span class="easybutton"><ion-icon size="small" name="eye-off-outline"></ion-icon></span>',
+									title:     'click to disable tracking and save track',
+									onClick: async function(btn, map) {
+										btn.state('enable');
+										location_button.state('enable');
+										follow_button.state('hide');
+										follow_button.disable();
+										map.stopLocate();
 														
-							var filename = prompt('Give the filename to store the GPX file');
-							if (filename != null){
-								var gpx_file = togpx(hist_segments.toGeoJSON());
-								var blob = new Blob([gpx_file], { type: "text/plain;charset=utf-8" });
-								saveAs(blob, filename + ".gpx");
-							}
+										var filename = prompt('Give the filename to store the GPX file');
+										if (filename != null){
+											try{
+												var gpx_file = await togpx(hist_segments.toGeoJSON());
+											}
+											catch (error) {
+												alert(error.message + " - linenumber: " + error.lineNumber);
+											}
+											var blob = new Blob([gpx_file], { type: "text/plain;charset=utf-8" });
+											saveAs(blob, filename + ".gpx");
+										}
 
-							map.removeLayer(my_location);
-							map.removeLayer(my_location_radius);
-							hist_locations.eachLayer(function (layer) {layer.remove(); hist_locations.removeLayer(layer);});
-							hist_segments.eachLayer(function (layer) {layer.remove(); hist_segments.removeLayer(layer);});
+										map.removeLayer(my_location);
+										map.removeLayer(my_location_radius);
+										hist_locations.eachLayer(function (layer) {layer.remove(); hist_locations.removeLayer(layer);});
+										hist_segments.eachLayer(function (layer) {layer.remove(); hist_segments.removeLayer(layer);});
 							
-							my_location = null;
-							my_location_radius = null;
-							last_stored_position = null;
-						}
-					}]}
-				);
+										my_location = null;
+										my_location_radius = null;
+										last_stored_position = null;
+									}
+								}]}
+							);
 				
-				follow_button = L.easyButton({
-					states: [{
-						stateName: 'hide',
-						icon:      '<p></p>',
-						title:     'hide follow button',
-						onClick: function(btn, map) {}
-						},
-						{
-						stateName: 'enable',
-						icon:      '<span class="easybutton"><ion-icon size="small" name="bicycle-outline"></ion-icon></span>',
-						title:     'enable bike-GPS following',
-						onClick: function(btn, map) {
-							btn.state('disable'); // change state on click!
-							map.setZoom(17);
-							}
-						},
-						{
-						stateName: 'disable',
-						icon:      '<span class="easybutton"><ion-icon size="small" name="bicycle"></ion-icon></span>',
-						title:     'click to disable bike-GPS following',
-						onClick: function(btn, map) {
-							btn.state('enable');
-						}	
+							follow_button = L.easyButton({
+								states: [{
+									stateName: 'hide',
+									icon:      '<p></p>',
+									title:     'hide follow button',
+									onClick: function(btn, map) {}
+								},
+								{
+									stateName: 'enable',
+									icon:      '<span class="easybutton"><ion-icon size="small" name="bicycle-outline"></ion-icon></span>',
+									title:     'enable bike-GPS following',
+									onClick: function(btn, map) {
+										btn.state('disable'); // change state on click!
+										map.setZoom(17);
+									}
+								},
+								{
+									stateName: 'disable',
+									icon:      '<span class="easybutton"><ion-icon size="small" name="bicycle"></ion-icon></span>',
+									title:     'click to disable bike-GPS following',
+									onClick: function(btn, map) {
+										btn.state('enable');
+									}	
+								}
+							]}
+						);
+						follow_button.disable();
+				
+						L.easyBar([ tracking_button, follow_button, ]).addTo( map );	
 					}
-				]}
-				);
-				follow_button.disable();
-				
-				L.easyBar([ tracking_button, follow_button, ]).addTo( map );	
-			}
 			
 			
-		var measure_control;		
-		function enableMeasure(map){
-			measure_control = L.control.measure({
-				position: 'topleft',
-				keyboard: false,	//  weather to use keyboard control for this plugin
-				activeKeyCode: 'M'.charCodeAt(0),	//  shortcut to activate measure
-				cancelKeyCode: 27,	//  shortcut to cancel measure, defaults to 'Esc'
-				lineColor: '#a8250d',
-				lineWeight: 2,
-				lineDashArray: '1, 0',
-				lineOpacity: 1,
-				// formatDistance: function (val) {
-					//   return Math.round(1000 * val / 1609.344) / 1000 + 'mile';
-					// }
-			}).addTo(map)
-		}		
+					var measure_control;		
+					function enableMeasure(map){
+						measure_control = L.control.measure({
+							position: 'topleft',
+							keyboard: false,	//  weather to use keyboard control for this plugin
+							activeKeyCode: 'M'.charCodeAt(0),	//  shortcut to activate measure
+							cancelKeyCode: 27,	//  shortcut to cancel measure, defaults to 'Esc'
+							lineColor: '#a8250d',
+							lineWeight: 2,
+							lineDashArray: '1, 0',
+							lineOpacity: 1,
+							// formatDistance: function (val) {
+								//   return Math.round(1000 * val / 1609.344) / 1000 + 'mile';
+								// }
+							}).addTo(map)
+						}		
 		
 				
-		function loadSheetsOnce(map, sheetsUrl, googleApiKey) {
-			var locations = [];
-			
-			// Replace the ID of your Google spreadsheet (containing latitude and longitude columns) and you API key in the URL, returning JSON:
-			// https://sheets.googleapis.com/v4/spreadsheets/ID_OF_YOUR_GOOGLE_SPREADSHEET/values/Sheet1!A2:Q?key=YOUR_API_KEY
-			// Also make sure your API key is authorised to access Google Sheets API - you can enable that through your Google Developer console.
-			$.getJSON(
-				"https://sheets.googleapis.com/v4/spreadsheets/" + sheetsUrl + "?key=" + googleApiKey,
-				function(data) {
-					// data.values contains the array of rows from the spreadsheet. Each row is also an array of cell values.
-					$(data.values).each(function() {
-						if( (Number(parseFloat(this[9])) === parseFloat(this[9])) && (Number(parseFloat(this[8])) === parseFloat(this[8])) ){
-							locations.push([parseFloat(this[9]), parseFloat(this[8])]);
-							labels_1.push(this[0]);
-							labels_2.push(this[2]);
-							labels_3.push(this[3]);
-						}
-					}
-				);
-				for (var i = 0; i < locations.length; i++) {
-					var marker = L.marker(locations[i]).addTo(map);
-				}
-			});
-		}
-		
-		
-		function enableRealtimeLocationsSheets(map){
-			L.easyButton({
-				states: [{
-					stateName: 'enable',
-					icon:      '<span class="easybutton"><ion-icon name="footsteps-outline"></ion-icon></span>',
-					title:     'enable realtime locations import via google sheets',
-					onClick: function(btn, map){
-						var sheetsUrl = prompt( 'geef de spreadsheet ID & eventueel sheet name + range (in volgende formaat: <id>/values/Sheet1!A1:Z)' );
-						var googleApiKey = prompt( 'geef je Google API Key' );
-						if(sheetsUrl != '' && googleApiKey != '' && sheetsUrl != null && googleApiKey != null){
-							loadSheetsRealtime(map, sheetsUrl, googleApiKey);
-							btn.state('disable'); // change state on click!
-						}
-					}
-					},
-					{
-						stateName: 'disable',
-						icon:      '<span class="easybutton"><ion-icon name="footsteps"></ion-icon></span>',
-						title:     'disable realtime locations',
-						onClick: function(btn, map) {
-							btn.state('enable'); // change state on click!
-						}
-					}]}
-			).addTo( map );
-		}
-		
-		
-		function loadSheetsRealtime(map, sheetsUrl, googleApiKey) {						
-			realtime = realtimeLocations(
-				function(success, error) {
-					
-					$.getJSON(
-						// Replace the ID of your Google spreadsheet (containing latitude and longitude columns) and you API key in the URL, returning JSON:
-						// https://sheets.googleapis.com/v4/spreadsheets/ID_OF_YOUR_GOOGLE_SPREADSHEET/values/Sheet1!A2:Q?key=YOUR_API_KEY
-						// Also make sure your API key is authorised to access Google Sheets API - you can enable that through your Google Developer console.
-						"https://sheets.googleapis.com/v4/spreadsheets/" + sheetsUrl + "?key=" + googleApiKey,
-						function(data) {														
+						function loadSheetsOnce(map, sheetsUrl, googleApiKey) {
 							var locations = [];
-							var labels_1 = [];						
-							var labels_2 = [];						
-							var labels_3 = [];						
-							var labels_4 = [];						
-							var labels_5 = [];
-							
-							// data.values contains the array of rows from the spreadsheet. Each row is also an array of cell values.							
-							$(data.values).each(function() {
-								if( (Number(parseFloat(this[9])) === parseFloat(this[9])) && (Number(parseFloat(this[8])) === parseFloat(this[8])) ){
-									locations.push([parseFloat(this[9]), parseFloat(this[8])]);
-									labels_1.push(this[0]);
-									labels_2.push(this[2]);
-									labels_3.push(this[3]);
+			
+							// Replace the ID of your Google spreadsheet (containing latitude and longitude columns) and you API key in the URL, returning JSON:
+							// https://sheets.googleapis.com/v4/spreadsheets/ID_OF_YOUR_GOOGLE_SPREADSHEET/values/Sheet1!A2:Q?key=YOUR_API_KEY
+							// Also make sure your API key is authorised to access Google Sheets API - you can enable that through your Google Developer console.
+							$.getJSON(
+								"https://sheets.googleapis.com/v4/spreadsheets/" + sheetsUrl + "?key=" + googleApiKey,
+								function(data) {
+									// data.values contains the array of rows from the spreadsheet. Each row is also an array of cell values.
+									$(data.values).each(function() {
+										if( (Number(parseFloat(this[9])) === parseFloat(this[9])) && (Number(parseFloat(this[8])) === parseFloat(this[8])) ){
+											locations.push([parseFloat(this[9]), parseFloat(this[8])]);
+											labels_1.push(this[0]);
+											labels_2.push(this[2]);
+											labels_3.push(this[3]);
+										}
+									}
+								);
+								for (var i = 0; i < locations.length; i++) {
+									var marker = L.marker(locations[i]).addTo(map);
 								}
 							});
-							locations = convertGeoJson(locations, labels_1, labels_2, labels_3, labels_4, labels_5);
+						}
+		
+		
+						function enableRealtimeLocationsSheets(map){
+							L.easyButton({
+								states: [{
+									stateName: 'enable',
+									icon:      '<span class="easybutton"><ion-icon name="footsteps-outline"></ion-icon></span>',
+									title:     'enable realtime locations import via google sheets',
+									onClick: function(btn, map){
+										var sheetsUrl = prompt( 'geef de spreadsheet ID & eventueel sheet name + range (in volgende formaat: <id>/values/Sheet1!A1:Z)' );
+										var googleApiKey = prompt( 'geef je Google API Key' );
+										if(sheetsUrl != '' && googleApiKey != '' && sheetsUrl != null && googleApiKey != null){
+											loadSheetsRealtime(map, sheetsUrl, googleApiKey);
+											btn.state('disable'); // change state on click!
+										}
+									}
+								},
+								{
+									stateName: 'disable',
+									icon:      '<span class="easybutton"><ion-icon name="footsteps"></ion-icon></span>',
+									title:     'disable realtime locations',
+									onClick: function(btn, map) {
+										btn.state('enable'); // change state on click!
+									}
+								}]}
+							).addTo( map );
+						}
+		
+		
+						function loadSheetsRealtime(map, sheetsUrl, googleApiKey) {						
+							realtime = realtimeLocations(
+								function(success, error) {
+					
+									$.getJSON(
+										// Replace the ID of your Google spreadsheet (containing latitude and longitude columns) and you API key in the URL, returning JSON:
+										// https://sheets.googleapis.com/v4/spreadsheets/ID_OF_YOUR_GOOGLE_SPREADSHEET/values/Sheet1!A2:Q?key=YOUR_API_KEY
+										// Also make sure your API key is authorised to access Google Sheets API - you can enable that through your Google Developer console.
+										"https://sheets.googleapis.com/v4/spreadsheets/" + sheetsUrl + "?key=" + googleApiKey,
+										function(data) {														
+											var locations = [];
+											var labels_1 = [];						
+											var labels_2 = [];						
+											var labels_3 = [];						
+											var labels_4 = [];						
+											var labels_5 = [];
 							
-							success(locations);
-						}).catch(error);
-					},
-				map);
+											// data.values contains the array of rows from the spreadsheet. Each row is also an array of cell values.							
+											$(data.values).each(function() {
+												if( (Number(parseFloat(this[9])) === parseFloat(this[9])) && (Number(parseFloat(this[8])) === parseFloat(this[8])) ){
+													locations.push([parseFloat(this[9]), parseFloat(this[8])]);
+													labels_1.push(this[0]);
+													labels_2.push(this[2]);
+													labels_3.push(this[3]);
+												}
+											});
+											locations = convertGeoJson(locations, labels_1, labels_2, labels_3, labels_4, labels_5);
+							
+											success(locations);
+										}).catch(error);
+									},
+									map);
 				
-			return realtime;
+									return realtime;
 				
-		}
-		
-		var realTimeGroup = new L.featureGroup;
-		
-		function realtimeLocations(function_locations, map){
-			realtime = L.realtime(function_locations, {
-				interval: 3000,
-				container: realTimeGroup,
-				getFeatureId: function(feature) { return feature.properties.featureId; },
-				pointToLayer: function(feature, latlng) {
-					marker = L.marker(latlng, {
-						'icon': L.icon({
-							iconUrl: 'https://svgsilh.com/png-512/155457.png',
-							//iconUrl: 'https://leafletjs.com/examples/custom-icons/leaf-green.png',
-							//shadowUrl: 'https://leafletjs.com/examples/custom-icons/leaf-shadow.png',
-							iconSize:     [30, 40], // size of the icon
-							className: 'blinking',
-							//shadowSize:   [B, H], // size of the shadow
-							//iconAnchor:   [B, H], // point of the icon which will correspond to marker's location
-							//shadowAnchor: [B, H],  // the same for the shadow
-							//popupAnchor:  [B, H] // point from which the popup should open relative to the iconAnchor
-						})
-					}).bindPopup('<b>' + feature.properties.label_2 + '</b>' + '<br />' + feature.properties.label_3)
-					.bindTooltip(feature.properties.label_1, {permanent: true})
-					.openTooltip()
-					.addTo(map);
-					
-					L.DomUtil.addClass(marker._icon, 'blinking');
-						
-					return marker;
-						}
-			}).addTo(map);
-			
-			var tochtGroepen = new Array();
-			var tochtControl = new L.control.layers(tochtGroepen,null, {collapsed:false}).addTo(map);
-			
-			realtime.on('update', function(e) {
-				var bounds;						
-				
-				tochtControl.remove(map);
-								
-				for (var key in realtime._features) {
-					feature = realtime._features[key];
-					if (tochtGroepen[feature.properties.label_2]){
-						if (! tochtGroepen[feature.properties.label_2].hasLayer(realtime._featureLayers[key])){
-							tochtGroepen[feature.properties.label_2].addLayer(realtime._featureLayers[key]);
-						}
-					}
-					else {
-						tochtGroepen[feature.properties.label_2] = new L.featureGroup;
-						tochtGroepen[feature.properties.label_2].addLayer(realtime._featureLayers[key]);
-					}
-				}
-				for (var key in tochtGroepen) {
-					tochtControl.removeLayer(tochtGroepen[key]);
-					tochtControl.addOverlay(tochtGroepen[key], key);
-				}
-				
-				tochtControl.addTo(map);
-											
-				bounds = GPXgroup.getBounds();
-				bounds.extend(realTimeGroup.getBounds());
-				
-				var today = new Date;
-				var now = today.getTime();
-				if(now - idleTime > 10000){
-					map.fitBounds(bounds);
-				}
-
-				Object.keys(e.update).forEach(function(id) {
-					var feature = e.update[id];
-					this.getLayer(id).bindPopup('<b>' + feature.properties.label_2 + '</b>' + '<br />' + feature.properties.label_3);
-				}.bind(this));
-			});
-			
-			return realtime;
-			
-		}
-
-		function convertGeoJson(locations, labels_1, labels_2, labels_3, labels_4, labels_5){
-			var locations_geojson = {};
-			locations_geojson.type = 'FeatureCollection';
-			locations_geojson.features = [];
-			$(locations).each(function() {
-				var location = {};
-				location.type = 'Feature';
-				if(labels_1 && labels_2 && labels_3 && labels_4 && labels_5){
-					location.properties = {
-						featureId: labels_1 ? labels_1[locations.indexOf(this)]: '',
-						label_1: labels_1 ? labels_1[locations.indexOf(this)]: '',
-						label_2: labels_2 ? labels_2[locations.indexOf(this)]: '',
-						label_3: labels_3 ? labels_3[locations.indexOf(this)]: '',
-						label_4: labels_4 ? labels_4[locations.indexOf(this)]: '',
-						label_5: labels_5 ? labels_5[locations.indexOf(this)]: ''
-					};
-				}
-				location.geometry = {};
-				location.geometry.type = 'Point';
-				location.geometry.coordinates = [parseFloat(this[0]), parseFloat(this[1])];
-				locations_geojson.features.push(location);
-			});
-			return locations_geojson;
-		}
-		
-		var GPXgroup = new L.featureGroup;
-		var GPXcontrol = new L.control.layers(new Array(),null, {collapsed:false});
-		
-		function loadFiles() {
-			var input, file, fr;
-
-			if (typeof window.FileReader !== 'function') {
-				alert("The file API isn't supported on this browser yet.");
-				return;
-			}
-
-			input = document.getElementById('fileinput');
-			if (!input) {
-				alert("Um, couldn't find the fileinput element.");
-			}
-			else if (!input.files) {
-				alert("This browser doesn't seem to support the `files` property of file inputs.");
-			}
-			else if (!input.files[0]) {
-				alert("Please select a file before clicking 'Load'");
-			}
-			else {
-				GPXcontrol.addTo(map);
-				for(var i = 0; i < input.files.length; i++){
-					file = input.files[i];
-					fr = new FileReader();
-					fr.onload = pushToMap;
-					fr.fileName = file.name.split('.').slice(0, -1).join('.');
-					fr.readAsText(file);
-				}
-			}
-			
-			function pushToMap(e){
-				
-				var GPXtext = e.target.result;
-
-				color = "#"+((1<<24)*Math.random()|0).toString(16);
-				gpx = new L.GPX(GPXtext, {
-					async: true,
-					marker_options: {
-						startIconUrl: '',
-						wptIconUrls: '',
-						endIconUrl: '',
-						shadowUrl: ''
-					},
-					polyline_options: {
-						opacity: 0.75,
-						color : color,
-						weight: 5,
-						lineCap: 'round'
-					} })
-					.on('loaded', function(e) {
-						map.fitBounds(GPXgroup.getBounds());
-					})
-					.addTo(map);
-					
-					GPXgroup.addLayer(gpx);
-					GPXcontrol.addOverlay(gpx, e.target.fileName + ' <span class="dot" style="background-color:' + color + ';"></span>');
-				}
-		}
-		
-		
-		function enableGPXupload(map) {
-			L.easyButton('<span class="easybutton">&#10547;</span>', function(btn, map){ //https://www.htmlsymbols.xyz/arrow-symbols
-				var x = document.createElement("input");
-				x.setAttribute("type", "file");
-				x.setAttribute("accept", "gpx");
-				x.setAttribute("id", "fileinput");
-				x.setAttribute("multiple", "multiple");
-				x.setAttribute("style", "display: none;");
-				x.setAttribute("oninput", "loadFiles();");
-				document.body.appendChild(x);  
-				$('#fileinput').trigger('click');
-			}, 'import GPX routes').addTo( map );
-		}
-
-
-		var geocoder;
-		function enableGeocoder(map) {
-			geocoder = L.Control.geocoder({position: 'topleft', collapsed: 'true'}).addTo(map);
-		}
-		
-		var control;
-		var route;
-		var routing_control;
-		function enableRouter(map) {
-			L.easyButton(
-				{
-				states: [{
-					stateName: 'enable',
-					icon:      '<span class="easybutton"><ion-icon name="trail-sign-outline"></ion-icon></span>',
-					title:     'enable routing',
-					onClick: function(btn, map){
-						var routing_profiles = {
-							"walking": L.layerGroup([]),
-							"cycling": L.layerGroup([]),
-							"driving": L.layerGroup([]),
-							"driving-traffic": L.layerGroup([])						
-						};
-						
-						for(var key in routing_profiles) {
-						  routing_profiles[key].layerID = key;
-						}
-						
-						routing_control = L.control.layers(routing_profiles).addTo(map);
-						map.on('baselayerchange', function (e) {
-							if(e.layer.layerID){
-								control._router = L.Routing.mapbox(
-								'pk.eyJ1IjoiZHJvcHBpbmdjaGlrYSIsImEiOiJja2dkdXQ4aTQwbXBqMnJsZXNsNTRqdG53In0.H_xtqAmm1KwWN_vQA7Vb-g',
-								{profile: "mapbox/" + e.layer.layerID});
-								control.route();
-							}
-						});
-						
-						control = L.Routing.control({
-							autoRoute: true,
-							routeWhileDragging: true,
-							showAlternatives: true,
-							show: true,
-							collapsible: true,
-							geocoder: L.Control.Geocoder.nominatim(),
-							router: L.Routing.mapbox(
-								'pk.eyJ1IjoiZHJvcHBpbmdjaGlrYSIsImEiOiJja2dkdXQ4aTQwbXBqMnJsZXNsNTRqdG53In0.H_xtqAmm1KwWN_vQA7Vb-g',
-								{profile: 'mapbox/walking'})
-						}).addTo(map);
-						
-						if(location_button.state() === 'disable'){
-							control.spliceWaypoints(0, 1, my_location.getLatLng());
-						}
-						
-						control.on('routeselected', function(e) {
-							route = e.route;
-						});
-						
-						if(isMobile){
-							control.hide();
-						}
-						
-						map.off('click dblclick mousedown zoomanim contextmenu');
-						map.on('click', function(e) {
-							waypoints = control.getWaypoints();
-							if(waypoints[0].latLng == undefined){
-								control.spliceWaypoints(0, 1, e.latlng);
-							}
-							else if(waypoints[1].latLng == undefined){
-								control.spliceWaypoints(1, 1, e.latlng);
-							}
-							else{
-								control.spliceWaypoints(control.getWaypoints().length, 0, e.latlng);
-							}
-						});
-						btn.state('disable');
-					}
-					},
-					{
-						stateName: 'disable',
-						icon:      '<span class="easybutton"><ion-icon name="trail-sign"></ion-icon></span>',
-						title:     'disable routing',
-						onClick: function(btn, map) {
-							var filename = prompt('Give the filename to store the GPX file');
-							if (filename != null){
-								var geojsons = route.coordinates;
-								var segments = L.layerGroup();
-								for (i = 0; i < geojsons.length - 1; i++) {
-									L.polyline([geojsons[i], geojsons[i+1]]).addTo(segments);
 								}
-								var gpx_file = togpx(segments.toGeoJSON());
-								var blob = new Blob([gpx_file], { type: "text/plain;charset=utf-8" });
-								saveAs(blob, filename + ".gpx");
-							}
-							
-							control.remove();
-							routing_control.remove();
-							control = undefined;
-							map.off('click');
-							map.on('click dblclick mousedown zoomanim contextmenu', onMapClick);
-							btn.state('enable');
-						}
-					}]
-				}
-			).addTo( map );
-		}
-
-		</script>
-	</head>
-	<body>
-		<script>				
-			map = initialiseMap();
-			map.on('click dblclick mousedown zoomanim contextmenu', onMapClick);
-			map.on('locationfound', onLocationFound);
-			map.on('locationerror', onLocationError);
+		
+								var realTimeGroup = new L.featureGroup;
+		
+								function realtimeLocations(function_locations, map){
+									realtime = L.realtime(function_locations, {
+										interval: 3000,
+										container: realTimeGroup,
+										getFeatureId: function(feature) { return feature.properties.featureId; },
+										pointToLayer: function(feature, latlng) {
+											marker = L.marker(latlng, {
+												'icon': L.icon({
+													iconUrl: 'https://svgsilh.com/png-512/155457.png',
+													//iconUrl: 'https://leafletjs.com/examples/custom-icons/leaf-green.png',
+													//shadowUrl: 'https://leafletjs.com/examples/custom-icons/leaf-shadow.png',
+													iconSize:     [30, 40], // size of the icon
+													className: 'blinking',
+													//shadowSize:   [B, H], // size of the shadow
+													//iconAnchor:   [B, H], // point of the icon which will correspond to marker's location
+													//shadowAnchor: [B, H],  // the same for the shadow
+													//popupAnchor:  [B, H] // point from which the popup should open relative to the iconAnchor
+												})
+											}).bindPopup('<b>' + feature.properties.label_2 + '</b>' + '<br />' + feature.properties.label_3)
+											.bindTooltip(feature.properties.label_1, {permanent: true})
+											.openTooltip()
+											.addTo(map);
+					
+											L.DomUtil.addClass(marker._icon, 'blinking');
+						
+											return marker;
+										}
+									}).addTo(map);
 			
-			enableMeasure(map);
-			enableLocationTracking(map);
-			enableHistoryLocationTracking(map);
-			enableGPXupload(map);
-			enableRealtimeLocationsSheets(map);
-			//loadSheetsOnce(map, <sheetsID>, <googleAPIkey>);		
-			enableRouter(map);
-			enableGeocoder(map);
-  </script>
-	</body>
-</html>
+									var tochtGroepen = new Array();
+									var tochtControl = new L.control.layers(tochtGroepen,null, {collapsed:false}).addTo(map);
+			
+									realtime.on('update', function(e) {
+										var bounds;						
+				
+										tochtControl.remove(map);
+								
+										for (var key in realtime._features) {
+											feature = realtime._features[key];
+											if (tochtGroepen[feature.properties.label_2]){
+												if (! tochtGroepen[feature.properties.label_2].hasLayer(realtime._featureLayers[key])){
+													tochtGroepen[feature.properties.label_2].addLayer(realtime._featureLayers[key]);
+												}
+											}
+											else {
+												tochtGroepen[feature.properties.label_2] = new L.featureGroup;
+												tochtGroepen[feature.properties.label_2].addLayer(realtime._featureLayers[key]);
+											}
+										}
+										for (var key in tochtGroepen) {
+											tochtControl.removeLayer(tochtGroepen[key]);
+											tochtControl.addOverlay(tochtGroepen[key], key);
+										}
+				
+										tochtControl.addTo(map);
+											
+										bounds = GPXgroup.getBounds();
+										bounds.extend(realTimeGroup.getBounds());
+				
+										var today = new Date;
+										var now = today.getTime();
+										if(now - idleTime > 10000){
+											map.fitBounds(bounds);
+										}
+
+										Object.keys(e.update).forEach(function(id) {
+											var feature = e.update[id];
+											this.getLayer(id).bindPopup('<b>' + feature.properties.label_2 + '</b>' + '<br />' + feature.properties.label_3);
+										}.bind(this));
+									});
+			
+									return realtime;
+			
+								}
+
+								function convertGeoJson(locations, labels_1, labels_2, labels_3, labels_4, labels_5){
+									var locations_geojson = {};
+									locations_geojson.type = 'FeatureCollection';
+									locations_geojson.features = [];
+									$(locations).each(function() {
+										var location = {};
+										location.type = 'Feature';
+										if(labels_1 && labels_2 && labels_3 && labels_4 && labels_5){
+											location.properties = {
+												featureId: labels_1 ? labels_1[locations.indexOf(this)]: '',
+												label_1: labels_1 ? labels_1[locations.indexOf(this)]: '',
+												label_2: labels_2 ? labels_2[locations.indexOf(this)]: '',
+												label_3: labels_3 ? labels_3[locations.indexOf(this)]: '',
+												label_4: labels_4 ? labels_4[locations.indexOf(this)]: '',
+												label_5: labels_5 ? labels_5[locations.indexOf(this)]: ''
+											};
+										}
+										location.geometry = {};
+										location.geometry.type = 'Point';
+										location.geometry.coordinates = [parseFloat(this[0]), parseFloat(this[1])];
+										locations_geojson.features.push(location);
+									});
+									return locations_geojson;
+								}
+		
+								var GPXgroup = new L.featureGroup;
+								var GPXcontrol = new L.control.layers(new Array(),null, {collapsed:false});
+								var Elevationgroup = new L.featureGroup;
+								var Elevationcontrol = new L.control.layers(new Array(),null, {collapsed:false, hideSingleBase:true});
+								Elevationcontrol.remove();
+		
+								function loadFiles() {
+									var input, file, fr;
+
+									if (typeof window.FileReader !== 'function') {
+										alert("The file API isn't supported on this browser yet.");
+										return;
+									}
+
+									input = document.getElementById('fileinput');
+									if (!input) {
+										alert("Um, couldn't find the fileinput element.");
+									}
+									else if (!input.files) {
+										alert("This browser doesn't seem to support the `files` property of file inputs.");
+									}
+									else if (!input.files[0]) {
+										alert("Please select a file before clicking 'Load'");
+									}
+									else {
+										GPXcontrol.addTo(map);
+										Elevationcontrol.addTo(map);
+										for(var i = 0; i < input.files.length; i++){
+											file = input.files[i];
+											fr = new FileReader();
+											fr.onload = pushToMap;
+											fr.fileName = file.name.split('.').slice(0, -1).join('.');
+											fr.readAsText(file);
+										}
+									}
+			
+									function pushToMap(e){
+										var GPXtext = e.target.result;
+
+										color = "#"+((1<<24)*Math.random()|0).toString(16);
+										var gpx = new L.GPX(GPXtext, {
+											async: true,
+											marker_options: {startIconUrl: '', wptIconUrls: '', endIconUrl: '', shadowUrl: ''},
+											polyline_options: {opacity: 0.75, color : color, weight: 5, lineCap: 'round'}
+											})
+											.on('loaded', function(e) {
+												map.fitBounds(GPXgroup.getBounds());
+											})
+											.addTo(map);
+					
+											GPXgroup.addLayer(gpx);
+											GPXcontrol.addOverlay(gpx, e.target.fileName + ' <span class="dot" style="background-color:' + color + ';"></span>');
+											dummyLayer = L.polyline([[0, 0], [0, 0]], {stroke: false, interactive: false});
+											dummyLayer.className = GPXtext;
+											Elevationgroup.addLayer(dummyLayer);
+											Elevationcontrol.addBaseLayer(
+												dummyLayer,
+												e.target.fileName + ' <span class="dot" style="background-color:' + color + ';"></span>');
+											event = document.createEvent('HTMLEvents');
+											event.layer = dummyLayer;
+											Elevationcontrol.remove();
+											map.fireEvent('baselayerchange', event);
+											elevation_button.state('elevation');
+											eleDiv.style.height = "0%";
+											eleDiv.style.display = "none";
+											mapDiv.style.height = "100%";
+											}
+										}
+
+
+										function enableGPXupload(map){
+											upload_button = L.easyButton({
+												states: [{
+													stateName: 'upload',
+													icon:      '<span class="easybutton">&#10547;</span>',
+													title:     'import GPX routes',
+													onClick: function(btn, map){ //https://www.htmlsymbols.xyz/arrow-symbols
+														var x = document.createElement("input");
+														x.setAttribute("type", "file");
+														x.setAttribute("accept", "gpx");
+														x.setAttribute("id", "fileinput");
+														x.setAttribute("multiple", "multiple");
+														x.setAttribute("style", "display: none;");
+														x.setAttribute("oninput", "loadFiles();");
+														document.body.appendChild(x);  
+														$('#fileinput').trigger('click');
+														elevation_button.enable();
+														elevation_button.state('elevation');
+													}
+												}]});
+				
+												elevation_button = L.easyButton({
+													states: [{
+														stateName: 'disable',
+														icon:      '<p></p>',
+														title:     'disable',
+														onClick: function(btn, map) {}
+													},
+													{
+														stateName: 'hide',
+														icon:      '<span class="easybutton"><ion-icon size="bar-chart" name="bar-chart"></ion-icon></span>',
+														title:     'click to close elevation profile',
+														onClick: function(btn, map) {
+															elevation_button.state('elevation');
+															eleDiv.style.height = "0%";
+															eleDiv.style.display = "none";
+															mapDiv.style.height = "100%";
+															Elevationcontrol.remove();
+														}
+													},
+													{
+														stateName: 'elevation',
+														icon:      '<span class="easybutton"><ion-icon size="bar-chart-outline" name="bar-chart-outline"></ion-icon></span>',
+														title:     'click to open elevation profile',
+														onClick: function(btn, map) {
+															elevation_button.state('hide');
+															eleDiv.style.display = "block";
+															eleDiv.style.height = "25%";
+															controlElevation._resizeChart();
+															mapDiv.style.height = "75%";
+															if(Elevationgroup.getLayers().length > 1) Elevationcontrol.addTo( map );
+														}
+													}
+												]}
+											);
+											elevation_button.disable();
+				
+											L.easyBar([ upload_button, elevation_button, ]).addTo( map );
+										}
+
+
+										var controlElevation;
+										var eleDiv;
+										var mapDiv;
+										function enableElevation(map){
+											var elevation_options = {
+												// Default chart colors: theme lime-theme, magenta-theme, ...
+												theme: "black-theme",
+												// Chart container outside/inside map container
+												detached: true,
+												// if (detached), the elevation chart container
+												elevationDiv: "#elevation-div",
+												// if (!detached) autohide chart profile on chart mouseleave
+												autohide: false,
+												// if (!detached) initial state of chart profile control
+												collapsed: false,
+												// if (!detached) control position on one of map corners
+												position: "topright",
+												// Autoupdate map center on chart mouseover.
+												followMarker: true,
+												// Autoupdate map bounds on chart update.
+												autofitBounds: true,
+												// Chart distance/elevation units.
+												imperial: false,
+												// [Lat, Long] vs [Long, Lat] points. (leaflet default: [Lat, Long])
+												reverseCoords: false,
+												// Acceleration chart profile: true || "summary" || "disabled" || false
+												acceleration: false,
+												// Slope chart profile: true || "summary" || "disabled" || false
+												slope: false,
+												// Speed chart profile: true || "summary" || "disabled" || false
+												speed: false,
+												// Display time info: true || "summary" || false
+												time: false,
+												// Display distance info: true || "summary"
+												distance: true,
+												// Display altitude info: true || "summary"
+												altitude: true,
+												// Summary track info style: "inline" || "multiline" || false
+												summary: 'inline',
+												// Download link: "link" || false || "modal"
+												downloadLink: false,
+												// Toggle chart ruler filter
+												ruler: true,
+												// Toggle chart legend filter
+												legend: false,
+												// Toggle "leaflet-almostover" integration
+												almostOver: true,
+												// Toggle "leaflet-distance-markers" integration
+												distanceMarkers: false,
+												// Display track waypoints
+												waypoints: true,
+												// Custom waypoint icons (associative array of <sym> tags)
+												wptIcons: {
+													'': L.divIcon({
+														className: 'elevation-waypoint-marker',
+														html: '<i class="elevation-waypoint-icon"></i>',
+														iconSize: [30, 30],
+														iconAnchor: [8, 30],
+													}),
+												}
+											};
+			  
+											controlElevation = L.control.elevation(elevation_options).addTo(map);
+											controlElevation.options.width = "1000";
+											eleDiv = controlElevation.eleDiv;
+											eleDiv.style.height = "0%";
+											eleDiv.style.display = "none";
+											mapDiv = document.getElementById("map");
+											mapDiv.style.height = "100%";
+										}
+
+		
+										var geocoder;
+										function enableGeocoder(map) {
+											geocoder = L.Control.geocoder({position: 'topleft', collapsed: 'true'}).addTo(map);
+										}
+		
+										var control;
+										var route;
+										var routing_control;
+										function enableRouter(map) {
+											routing_button = L.easyButton(
+												{
+													states: [{
+														stateName: 'enable',
+														icon:      '<span class="easybutton"><ion-icon name="trail-sign-outline"></ion-icon></span>',
+														title:     'enable routing',
+														onClick: function(btn, map){
+															var routing_profiles = {
+																"walking": L.layerGroup([]),
+																"cycling": L.layerGroup([]),
+																"driving": L.layerGroup([]),
+																"driving-traffic": L.layerGroup([])						
+															};
+						
+															for(var key in routing_profiles) {
+																routing_profiles[key].layerID = key;
+															}
+						
+															routing_control = L.control.layers(routing_profiles).addTo(map);
+												
+															control = L.Routing.control({
+																autoRoute: true,
+																routeWhileDragging: true,
+																showAlternatives: true,
+																show: true,
+																collapsible: true,
+																geocoder: L.Control.Geocoder.nominatim(),
+																router: L.Routing.mapbox(
+																	sleutel,
+																	{profile: 'mapbox/walking'})
+																}).addTo(map);
+						
+																if(location_button.state() === 'disable'){
+																	control.spliceWaypoints(0, 1, my_location.getLatLng());
+																}
+						
+																control.on('routeselected', function(e) {
+																	route = e.route;
+																});
+						
+																if(isMobile){
+																	control.hide();
+																}
+						
+																map.off('click dblclick mousedown zoomanim contextmenu');
+																map.on('click', function(e) {
+																	waypoints = control.getWaypoints();
+																	if(waypoints[0].latLng == undefined){
+																		control.spliceWaypoints(0, 1, e.latlng);
+																	}
+																	else if(waypoints[1].latLng == undefined){
+																		control.spliceWaypoints(1, 1, e.latlng);
+																	}
+																	else{
+																		control.spliceWaypoints(control.getWaypoints().length, 0, e.latlng);
+																	}
+																});
+																btn.state('disable');
+															}
+														},
+														{
+															stateName: 'disable',
+															icon:      '<span class="easybutton"><ion-icon name="trail-sign"></ion-icon></span>',
+															title:     'disable routing',
+															onClick: async function(btn, map) {
+																var filename = prompt('Give the filename to store the GPX file');
+																if (filename != null){
+																	var geojsons = route.coordinates;
+																	var waypoints = route.waypoints;
+																	var path = L.layerGroup();
+																	var segments = L.polyline([geojsons[0]]).addTo(path);
+																	for (i = 1; i < geojsons.length; i++) {
+																		segments.addLatLng(geojsons[i]);
+																	}
+																	for (i = 0; i < waypoints.length; i++) {
+																		L.marker(waypoints[i].latLng).addTo(path);
+																	}
+																	try{
+																		var gpx_file = await togpx(path.toGeoJSON());
+																	}
+																	catch (error) {
+																		alert(error.message + " - linenumber: " + error.lineNumber);
+																	}
+																	var blob = new Blob([gpx_file], { type: "text/plain;charset=utf-8" });
+																	saveAs(blob, filename + ".gpx");
+																}
+							
+																control.remove();
+																routing_control.remove();
+																control = undefined;
+																map.off('click');
+																map.on('click dblclick mousedown zoomanim contextmenu', onMapClick);
+																btn.state('enable');
+															}
+														}]
+													}
+												).addTo( map );
+											}
+
+											</script>
+										</head>
+										<body>
+											<script>
+												map = initialiseMap();
+												map.on('click dblclick mousedown zoomanim contextmenu', onMapClick);
+												map.on('locationfound', onLocationFound);
+												map.on('locationerror', onLocationError);
+												map.on('baselayerchange', baseLayerChange);
+			
+												enableElevation(map);
+												enableGPXupload(map);
+												enableMeasure(map);
+												enableLocationTracking(map);
+												enableHistoryLocationTracking(map);
+												enableRealtimeLocationsSheets(map);
+												//loadSheetsOnce(map, <sheetsID>, <googleAPIkey>);		
+												enableRouter(map);
+												enableGeocoder(map);
+
+												</script>
+											</body>
+											</html>

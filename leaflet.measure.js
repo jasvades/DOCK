@@ -66,7 +66,7 @@ L.Control.Measure = L.Control.extend({
 		return link
 	},
 
-	_toggleMeasure: function (gpx = true) {
+	_toggleMeasure: async function (gpx = true) {
 		this._measuring = !this._measuring
 		if (this._measuring) {
 			L.DomUtil.addClass(this._container, 'leaflet-control-measure-on')
@@ -75,7 +75,12 @@ L.Control.Measure = L.Control.extend({
 		} else if (gpx) {
 			var filename = prompt('Give the filename to store the GPX file');
 			if (filename != null){
-				var gpx_file = togpx(this._layerPaint.toGeoJSON());
+				try{
+					var gpx_file = await togpx(this._layerPaint.toGeoJSON());
+				}
+				catch (error) {
+					alert(error.message + " - linenumber: " + error.lineNumber);
+				}
 				var blob = new Blob([gpx_file], { type: "text/plain;charset=utf-8" });
             	saveAs(blob, filename + ".gpx");
 			}

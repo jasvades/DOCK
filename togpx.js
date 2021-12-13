@@ -92,6 +92,8 @@
 			features = [geojson];
 		else
 			features = [{type:"Feature", properties: {}, geometry: geojson}];
+		promises_1 = [];
+		var i = 0;
 		features.forEach(function mapFeature(f) {
 			switch (f.geometry.type) {
 				// POIs
@@ -99,8 +101,9 @@
 			case "MultiPoint":
 				var coords = f.geometry.coordinates;
 				if (f.geometry.type == "Point") coords = [coords];
+				gpx.gpx.wpt.push(...(new Array(coords.length)));
 				coords.forEach(function (coordinates) {
-					o = {
+					var o = {
 						"@lat": coordinates[1],
 						"@lon": coordinates[0],
 						"name": options.featureTitle(f.properties),
@@ -108,9 +111,27 @@
 					};
 					if (coordinates[2] !== undefined) {
 						o.ele = coordinates[2];
+						add_feature_link(o,f);
+						gpx.gpx.wpt.splice(i,1,o);
 					}
-					add_feature_link(o,f);
-					gpx.gpx.wpt.push(o);
+					else{
+						if(coordinates[0] > 0){
+							lng_wmp = ((coordinates[0]+180)%360)-180;
+						}
+						else {
+							lng_wmp = lng_wmp = ((coordinates[0]-180)%360)+180;
+						}
+						request = 'https://api.mapbox.com/v4/mapbox.mapbox-terrain-v2/tilequery/' + lng_wmp.toString() + ',' + coordinates[1].toString() + '.json?layers=contour&limit=50&access_token=pk.eyJ1IjoiZHJvcHBpbmdjaGlrYSIsImEiOiJja2dkdXQ4aTQwbXBqMnJsZXNsNTRqdG53In0.H_xtqAmm1KwWN_vQA7Vb-g';
+						promise = fetch(request, {method: "GET"})
+						.then(function(response) {return response.text();})
+						.then(function(text) {
+								o.ele = Math.max(...JSON.parse(text).features.map((feature) => feature.properties.ele));
+								add_feature_link(o,f);
+								gpx.gpx.wpt.splice(i,1,o);
+						});
+						promises_1.push(promise);
+					}
+					i++;
 				});
 				break;
 				// LineStrings
@@ -119,65 +140,107 @@
 				var coords = f.geometry.coordinates;
 				var times = options.featureCoordTimes(f);
 				if (f.geometry.type == "LineString") coords = [coords];
-				o = {
+				var o = {
 					"name": options.featureTitle(f.properties),
 					"desc": options.featureDescription(f.properties)
 				};
 				add_feature_link(o,f);
-				o.trkseg = [];
-				coords.forEach(function(coordinates) {
-					var seg = {trkpt: []};
+				o.trkseg = new Array(coords.length);
+				promises_2 = [];
+				coords.forEach(function(coordinates, j) {
+					var seg = {trkpt: new Array(coordinates.length)};
+					promises_3 = [];
 					coordinates.forEach(function(c, i) {
 						var o = {
 							"@lat": c[1],
 							"@lon":c[0]
 						};
-						if (c[2] !== undefined) {
-							o.ele = c[2];
-						}
 						if (times && times[i]) {
 							o.time = times[i];
 						}
-						seg.trkpt.push(o);
+						if (c[2] !== undefined) {
+							o.ele = c[2];
+							seg.trkpt.splice(i,1,o);
+						}
+						else{
+							if(c[0] > 0){
+								lng_wmp = ((c[0]+180)%360)-180;
+							}
+							else {
+								lng_wmp = lng_wmp = ((c[0]-180)%360)+180;
+							}
+							request = 'https://api.mapbox.com/v4/mapbox.mapbox-terrain-v2/tilequery/' + lng_wmp.toString() + ',' + c[1].toString() + '.json?layers=contour&limit=50&access_token=pk.eyJ1IjoiZHJvcHBpbmdjaGlrYSIsImEiOiJja2dkdXQ4aTQwbXBqMnJsZXNsNTRqdG53In0.H_xtqAmm1KwWN_vQA7Vb-g';
+							promise = fetch(request, {method: "GET"})
+							.then(function(response) {return response.text();})
+							.then(
+								function(text) {
+									o.ele = Math.max(...JSON.parse(text).features.map((feature) => feature.properties.ele));
+									seg.trkpt.splice(i,1,o);
+							});
+							promises_1.push(promise);
+							promises_2.push(promise);
+							promises_3.push(promise);
+						}
 					});
-					o.trkseg.push(seg);
+					Promise.all(promises_3).then( function () {o.trkseg.splice(j,1,seg); return});
 				});
-				gpx.gpx.trk.push(o);
+				Promise.all(promises_2).then( function () {gpx.gpx.trk.push(o); return});
 				break;
 				// Polygons / Multipolygons
 			case "Polygon":
 			case "MultiPolygon":
-				o = {
+				var o = {
 					"name": options.featureTitle(f.properties),
 					"desc": options.featureDescription(f.properties)
 				};
 				add_feature_link(o,f);
-				o.trkseg = [];
+				o.trkseg = new Array(coords.length);
 				var coords = f.geometry.coordinates;
 				var times = options.featureCoordTimes(f);
 				if (f.geometry.type == "Polygon") coords = [coords];
+				promises_2 = [];
 				coords.forEach(function(poly) {
-					poly.forEach(function(ring) {
-						var seg = {trkpt: []};
+					poly.forEach(function(ring,j) {
+						var seg = {trkpt: new Array(ring.length)};
 						var i = 0;
-						ring.forEach(function(c) {
+						promises_3 = [];
+						ring.forEach(async function(c) {
 							var o = {
 								"@lat": c[1],
 								"@lon":c[0]
 							};
-							if (c[2] !== undefined) {
-								o.ele = c[2];
-							}
 							if (times && times[i]) {
 								o.time = times[i];
 							}
+							if (c[2] !== undefined) {
+								o.ele = c[2];
+								seg.trkpt.splice(i,1,o);
+							}
+							else{
+								if(c[0] > 0){
+									lng_wmp = ((c[0]+180)%360)-180;
+								}
+								else {
+									lng_wmp = lng_wmp = ((c[0]-180)%360)+180;
+								}
+								request = 'https://api.mapbox.com/v4/mapbox.mapbox-terrain-v2/tilequery/' + lng_wmp.toString() + ',' + c[1].toString() + '.json?layers=contour&limit=50&access_token=pk.eyJ1IjoiZHJvcHBpbmdjaGlrYSIsImEiOiJja2dkdXQ4aTQwbXBqMnJsZXNsNTRqdG53In0.H_xtqAmm1KwWN_vQA7Vb-g';
+								promise = fetch(request, {method: "GET"})
+								.then(function(response) {return response.text();})
+								.then(
+									function(text) {
+										o.ele = Math.max(...JSON.parse(text).features.map((feature) => feature.properties.ele));
+										seg.trkpt.splice(i,1,o);
+								});
+								promises_1.push(promise);
+								promises_2.push(promise);
+								promises_3.push(promise);
+							}
 							i++;
-							seg.trkpt.push(o);
 						});
-						o.trkseg.push(seg);
+						Promise.all(promises_3).then( function () {o.trkseg.splice(j,1,seg); return});
 					});
 				});
-				gpx.gpx.trk.push(o);
+				Promise.all(promises_2).then( function () {gpx.gpx.trk.push(o); return});
 				break;
 			case "GeometryCollection":
 				f.geometry.geometries.forEach(function (geometry) {
@@ -192,8 +255,7 @@
 				console.log("warning: unsupported geometry type: "+f.geometry.type);
 			}
 		});
-		gpx_str = JXON.stringify(gpx);
-		return gpx_str;
+		return Promise.all(promises_1).then( () => JXON.stringify(gpx));
 	};
 
 	module.exports = togpx;
@@ -522,19 +584,19 @@
 		return this.xmlToJs(xmlObj);
 	};
 
-this.jsToString = this.stringify = function(oObjTree, sNamespaceURI /* optional */ , sQualifiedName /* optional */ , oDocumentType /* optional */ ) {
-	return this.xmlToString(
-		this.jsToXml(oObjTree, sNamespaceURI, sQualifiedName, oDocumentType)
-	);
-};
+	this.jsToString = this.stringify = function(oObjTree, sNamespaceURI /* optional */ , sQualifiedName /* optional */ , oDocumentType /* optional */ ) {
+		return this.xmlToString(
+			this.jsToXml(oObjTree, sNamespaceURI, sQualifiedName, oDocumentType)
+		);
+	};
 
-this.each = function(arr, func, thisArg) {
-	if (arr instanceof Array) {
-		arr.forEach(func, thisArg);
-	} else {
-		[arr].forEach(func, thisArg);
-	}
-};
+	this.each = function(arr, func, thisArg) {
+		if (arr instanceof Array) {
+			arr.forEach(func, thisArg);
+		} else {
+			[arr].forEach(func, thisArg);
+		}
+	};
 })();
 
 }
