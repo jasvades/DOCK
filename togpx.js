@@ -128,7 +128,13 @@
 								o.ele = Math.max(...JSON.parse(text).features.map((feature) => feature.properties.ele));
 								add_feature_link(o,f);
 								gpx.gpx.wpt.splice(i,1,o);
-						});
+							})
+						.catch(
+							() => {
+								o.ele = 0;
+								add_feature_link(o,f);
+								gpx.gpx.wpt.splice(i,1,o);
+							});
 						promises_1.push(promise);
 					}
 					i++;
@@ -176,6 +182,10 @@
 								function(text) {
 									o.ele = Math.max(...JSON.parse(text).features.map((feature) => feature.properties.ele));
 									seg.trkpt.splice(i,1,o);
+								})
+							.catch(() => {
+								o.ele = 0;
+								seg.trkpt.splice(i,1,o);
 							});
 							promises_1.push(promise);
 							promises_2.push(promise);
@@ -230,6 +240,10 @@
 									function(text) {
 										o.ele = Math.max(...JSON.parse(text).features.map((feature) => feature.properties.ele));
 										seg.trkpt.splice(i,1,o);
+									})
+								.catch(() => {
+									o.ele = 0;
+									seg.trkpt.splice(i,1,o);
 								});
 								promises_1.push(promise);
 								promises_2.push(promise);
