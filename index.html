@@ -59,6 +59,7 @@
 		<script src="Control.Geocoder.js"></script>
 		<link rel="stylesheet" href="leaflet-elevation-master/leaflet-elevation.css" />
 		<script src="leaflet-elevation-master/leaflet-elevation.js"></script>
+		<script src="https://unpkg.com/leaflet-rotate@0.1.3/dist/leaflet-rotate-src.js"></script>
 		<script src="togeojson.js"></script>
 	
 		<!-- load google API -->
@@ -96,7 +97,18 @@
 			var tileLayers;
 				
 			function initialiseMap() {
-				var map = L.map('map', {closePopupOnClick: false, zoomControl: false}).fitWorld();
+				var map = L.map('map', {
+					closePopupOnClick: false,
+					zoomControl: false,
+					rotate: true,
+					touchRotate: true,
+					rotateControl: {
+						closeOnZeroBearing: false
+					},
+					bearing: 0,
+				}).fitWorld();
+				
+				map.touchRotate.enable();
 			
 				var tileURLs = new Array();
 			
@@ -226,8 +238,10 @@
 							forward_lat = e.latlng.lat + (75.0 / (111111.0 * normalize)) * (e.latlng.lat - (last_stored_position ? last_stored_position.lat : e.latlng.lat));
 							forward_lng = e.latlng.lng + (75.0 / (111111.0 * Math.cos(e.latlng.lat) * normalize)) * (e.latlng.lng - (last_stored_position ? last_stored_position.lng : e.latlng.lng));
 							map.setView(L.latLng(forward_lat, forward_lng));
+							angle = Math.atan2(forward_lat - e.latlng.lat, forward_lng - e.latlng.lng) * 180 / Math.PI;
+							map.setBearing(angle);
 						}
-				
+						
 						my_location
 						.setLatLng(e.latlng)
 						.bindPopup("Je bent maximaal " + Math.round(e.accuracy) + " meter van dit punt");
@@ -800,6 +814,8 @@
 												almostOver: true,
 												// Toggle "leaflet-distance-markers" integration
 												distanceMarkers: false,
+												// Interpolation
+												interpolation: "curveLinear",
 												// Display track waypoints
 												waypoints: true,
 												// Custom waypoint icons (associative array of <sym> tags)
