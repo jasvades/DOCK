@@ -101,13 +101,15 @@
 					closePopupOnClick: false,
 					zoomControl: false,
 					rotate: true,
-					touchRotate: true,
+					touchRotate: false,
 					rotateControl: {
 						closeOnZeroBearing: false
 					},
 					bearing: 0,
 				}).fitWorld();
-							
+				
+				//map.compassBearing.enable();
+			
 				var tileURLs = new Array();
 			
 				//https://leaflet-extras.github.io/leaflet-providers/preview/
