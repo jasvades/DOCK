@@ -198,7 +198,8 @@
 		
 			var my_location = null;
 			var last_stored_position = null;
-			var my_location_radius = null;						
+			var my_location_radius = null;
+			var angle = 0.0;						
 			var location_button;
 			var tracking_button;
 			function onLocationFound(e) {			
@@ -236,7 +237,7 @@
 							forward_lat = e.latlng.lat + (75.0 / (111111.0 * normalize)) * (e.latlng.lat - (last_stored_position ? last_stored_position.lat : e.latlng.lat));
 							forward_lng = e.latlng.lng + (75.0 / (111111.0 * Math.cos(e.latlng.lat) * normalize)) * (e.latlng.lng - (last_stored_position ? last_stored_position.lng : e.latlng.lng));
 							map.setView(L.latLng(forward_lat, forward_lng));
-							angle = (Math.atan2(forward_lat - e.latlng.lat, forward_lng - e.latlng.lng) * 180 / Math.PI) - 90;
+							angle = (angle + (Math.atan2(forward_lat - e.latlng.lat, forward_lng - e.latlng.lng) * 180 / Math.PI) - 90)/2.;
 							map.setBearing(angle);
 						}
 						
