@@ -176,11 +176,11 @@
 					}	
 				});
 			
-				if (popup.isOpen() && event.type === 'mousedown'){
+				if (popup.isOpen() && event.type === 'mouseup'){
 					popup.remove();
-					popupOpen = true;	
+					popupOpen = true;
 				}
-				else if (! popupOpen && event.type === 'mousedown' && ! isMobile){
+				else if (! popupOpen && event.type === 'mouseup' && !drag && ! isMobile){
 					popup
 					.setLatLng(event.latlng)
 					.setContent("De coördinaten van dit punt zijn: " + event.latlng.toString().substring(6))
@@ -193,6 +193,7 @@
 					.setContent("De coördinaten van dit punt zijn: " + event.latlng.toString().substring(6))
 					.openOn(this);
 				}
+				drag = false;
 			}
 		
 		
@@ -952,10 +953,15 @@
 										<body>
 											<script>
 												map = initialiseMap();
-												map.on('click dblclick mousedown zoomanim contextmenu', onMapClick);
+												map.on('click dblclick mouseup zoomanim contextmenu', onMapClick);
 												map.on('locationfound', onLocationFound);
 												map.on('locationerror', onLocationError);
 												map.on('baselayerchange', baseLayerChange);
+												
+												let drag = false;
+
+												document.addEventListener('mousedown', () => drag = false);
+												document.addEventListener('mousemove', () => drag = true);
 			
 												enableElevation(map);
 												enableGPXupload(map);
