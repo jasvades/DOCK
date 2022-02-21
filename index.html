@@ -50,6 +50,8 @@
 		<script src="gpx.min.js"></script> <!-- load leaflet-gpx -->
 		<script src="leaflet.measure.js"></script>
 		<script src="easy-button.js"></script>
+		<script src="https://unpkg.com/regenerator-runtime" type="text/javascript"></script>
+		<script src="https://unpkg.com/leaflet-topography" type="text/javascript"></script>
 		<script src='togpx.js'></script>
 		<script src="FileSaver.js"></script>
 		<script src="https://unpkg.com/ionicons@5.4.0/dist/ionicons.js"></script>
@@ -138,10 +140,10 @@
 			
 				overlayLayers = new Array();
 			
-				overlayLayers['RouteYou'] = L.tileLayer('https://tiles.routeyou.com/overlay/m/64/{z}/{x}/{y}.png');
-				overlayLayers['Fietsknooppunten'] = L.tileLayer('https://tile.openstreetmap.nl/openfietskaart-rcn/{z}/{x}/{y}.png');
-				overlayLayers['LF-fietsroutes'] = L.tileLayer('https://tile.openstreetmap.nl/openfietskaart-ncn/{z}/{x}/{y}.png');
-				overlayLayers['GR-routes & Wandelknooppunten'] = L.tileLayer('https://tile.openstreetmap.nl/openwandelkaart-overlay/{z}/{x}/{y}.png');
+				//overlayLayers['RouteYou'] = L.tileLayer('https://tiles.routeyou.com/overlay/m/64/{z}/{x}/{y}.png');
+				//overlayLayers['Fietsknooppunten'] = L.tileLayer('https://tile.openstreetmap.nl/openfietskaart-rcn/{z}/{x}/{y}.png');
+				//overlayLayers['LF-fietsroutes'] = L.tileLayer('https://tile.openstreetmap.nl/openfietskaart-ncn/{z}/{x}/{y}.png');
+				//overlayLayers['GR-routes & Wandelknooppunten'] = L.tileLayer('https://tile.openstreetmap.nl/openwandelkaart-overlay/{z}/{x}/{y}.png');
 			
 				L.control.layers(tileLayers, overlayLayers).addTo(map);
 				L.control.scale().addTo(map);
@@ -867,7 +869,7 @@
 																routing_profiles[key].layerID = key;
 															}
 						
-															routing_control = L.control.layers(routing_profiles).addTo(map);
+															routing_control = L.control.layers(routing_profiles,null, {collapsed:false}).addTo(map);
 												
 															control = L.Routing.control({
 																autoRoute: true,

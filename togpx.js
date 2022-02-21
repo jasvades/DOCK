@@ -121,14 +121,22 @@
 						else {
 							lng_wmp = lng_wmp = ((coordinates[0]-180)%360)+180;
 						}
-						request = 'https://api.mapbox.com/v4/mapbox.mapbox-terrain-v2/tilequery/' + lng_wmp.toString() + ',' + coordinates[1].toString() + '.json?layers=contour&limit=50&access_token=pk.eyJ1IjoiZHJvcHBpbmdjaGlrYSIsImEiOiJja2dkdXQ4aTQwbXBqMnJsZXNsNTRqdG53In0.H_xtqAmm1KwWN_vQA7Vb-g';
-						promise = fetch(request, {method: "GET"})
-						.then(function(response) {return response.text();})
-						.then(function(text) {
-								o.ele = Math.max(...JSON.parse(text).features.map((feature) => feature.properties.ele));
-								add_feature_link(o,f);
-								gpx.gpx.wpt.splice(i,1,o);
-							})
+						//old elevation code
+						//request = 'https://api.mapbox.com/v4/mapbox.mapbox-terrain-v2/tilequery/' + lng_wmp.toString() + ',' + coordinates[1].toString() + '.json?layers=contour&limit=50&access_token=pk.eyJ1IjoiZHJvcHBpbmdjaGlrYSIsImEiOiJja2dkdXQ4aTQwbXBqMnJsZXNsNTRqdG53In0.H_xtqAmm1KwWN_vQA7Vb-g';
+						//promise = fetch(request, {method: "GET"})
+						//.then(function(response) {return response.text();})
+						//.then(function(text) {
+						//		o.ele = Math.max(...JSON.parse(text).features.map((feature) => feature.properties.ele));
+						//		add_feature_link(o,f);
+						//		gpx.gpx.wpt.splice(i,1,o);
+						//	})
+						//promise = Topography.getTopography(L.latLng(coordinates[1], lng_wmp), options)
+						
+						promise = L.Topography.getTopography(L.latLng(coordinates[1], lng_wmp), {token: sleutel})
+						.then(function(results) {
+							o.ele = JSON.stringify(results.elevation);
+							add_feature_link(o,f);
+							gpx.gpx.wpt.splice(i,1,o);})
 						.catch(
 							() => {
 								o.ele = 0;
@@ -175,14 +183,10 @@
 							else {
 								lng_wmp = lng_wmp = ((c[0]-180)%360)+180;
 							}
-							request = 'https://api.mapbox.com/v4/mapbox.mapbox-terrain-v2/tilequery/' + lng_wmp.toString() + ',' + c[1].toString() + '.json?layers=contour&limit=50&access_token=pk.eyJ1IjoiZHJvcHBpbmdjaGlrYSIsImEiOiJja2dkdXQ4aTQwbXBqMnJsZXNsNTRqdG53In0.H_xtqAmm1KwWN_vQA7Vb-g';
-							promise = fetch(request, {method: "GET"})
-							.then(function(response) {return response.text();})
-							.then(
-								function(text) {
-									o.ele = Math.max(...JSON.parse(text).features.map((feature) => feature.properties.ele));
-									seg.trkpt.splice(i,1,o);
-								})
+							promise = L.Topography.getTopography(L.latLng(c[1], lng_wmp), {token: sleutel})
+							.then(function(results) {
+								o.ele = JSON.stringify(results.elevation);
+								seg.trkpt.splice(i,1,o);})
 							.catch(() => {
 								o.ele = 0;
 								seg.trkpt.splice(i,1,o);
@@ -233,14 +237,10 @@
 								else {
 									lng_wmp = lng_wmp = ((c[0]-180)%360)+180;
 								}
-								request = 'https://api.mapbox.com/v4/mapbox.mapbox-terrain-v2/tilequery/' + lng_wmp.toString() + ',' + c[1].toString() + '.json?layers=contour&limit=50&access_token=pk.eyJ1IjoiZHJvcHBpbmdjaGlrYSIsImEiOiJja2dkdXQ4aTQwbXBqMnJsZXNsNTRqdG53In0.H_xtqAmm1KwWN_vQA7Vb-g';
-								promise = fetch(request, {method: "GET"})
-								.then(function(response) {return response.text();})
-								.then(
-									function(text) {
-										o.ele = Math.max(...JSON.parse(text).features.map((feature) => feature.properties.ele));
-										seg.trkpt.splice(i,1,o);
-									})
+								promise = L.Topography.getTopography(L.latLng(c[1], lng_wmp), {token: sleutel})
+								.then(function(results) {
+									o.ele = JSON.stringify(results.elevation);
+									seg.trkpt.splice(i,1,o);})
 								.catch(() => {
 									o.ele = 0;
 									seg.trkpt.splice(i,1,o);
