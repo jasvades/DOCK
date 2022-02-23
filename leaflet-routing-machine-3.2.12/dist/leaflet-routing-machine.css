@@ -233,6 +233,9 @@
 
 .leaflet-routing-container-hide .leaflet-routing-collapse-btn:after {
     content: none;
+    position: absolute;
+    top: 0;
+    right: 6px;
 }
 
 .leaflet-top .leaflet-routing-container.leaflet-routing-container-hide {
