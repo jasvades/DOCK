@@ -53,7 +53,7 @@
 .leaflet-control-geocoder-expanded input, .leaflet-control-geocoder-error {
 	width: 226px;
 	padding-right: 0px;
-	padding-left: 0px;
+	padding-left: 4px;
 	color: #000;
 }
 
