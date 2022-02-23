@@ -29,32 +29,44 @@
 	height: 30px;
 	display: table-cell;
 	vertical-align: middle;
+	position: relative;
+	float:right;
+	padding-left: 0px;
+	padding-right: 0px;
 	width: 0px;
 	transition: width 0.125s ease-in;
 }
 
 .leaflet-control-geocoder-icon {
-	width: 26px;
+	position: absolute;
+	top: 50%;
+	-ms-transform: translateY(-50%);
+	transform: translateY(-50%);
+    width: 30px;
 	height: 30px;
 	background-image: url(search-outline.svg);
 	background-repeat: no-repeat;
 	background-position: center;
 	background-size:70%;
-	float: right;
 	cursor: pointer;
 }
 
+.leaflet-control-geocoder-expanded input, .leaflet-control-geocoder-icon {
+	position: relative;
+	float:right;
+}
+
 .leaflet-control-geocoder-throbber .leaflet-control-geocoder-icon {
-	width: 20px;
-	height: 26px;
+	width: 24px;
+	height: 30px;
 	background-image: url(throbber.gif);
 }
 
 .leaflet-control-geocoder-expanded input, .leaflet-control-geocoder-error {
 	width: 226px;
-	padding-right: 0px;
-	padding-left: 4px;
 	color: #000;
+	position: relative;
+	float:right;
 }
 
 .leaflet-control-geocoder-form input:focus {
@@ -110,8 +122,9 @@ ul.leaflet-control-geocoder-alternatives {
 	display: block;
 	text-decoration: none;
 	color: black;
-	padding: 6px 8px 16px 6px;
+	padding: 0px 8px 0px 6px;
 	font-size: 10pt;
+	background-color: #fff;
 }
 
 .leaflet-touch.leaflet-control-geocoder-alternatives a {
