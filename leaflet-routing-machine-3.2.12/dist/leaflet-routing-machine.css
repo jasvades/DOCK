@@ -222,9 +222,12 @@
 }
 
 .leaflet-routing-container-hide .leaflet-routing-collapse-btn {
-    position: relative;
-    top: 1px;
+    position: absolute;
+    top: 50%;
 	left: 5px;
+	margin: 0;
+	-ms-transform: translateY(-50%);
+	transform: translateY(-50%);
     display: block;
     width: 18px;
     height: 18px;
@@ -233,9 +236,6 @@
 
 .leaflet-routing-container-hide .leaflet-routing-collapse-btn:after {
     content: none;
-    position: absolute;
-    top: 0;
-    right: 6px;
 }
 
 .leaflet-top .leaflet-routing-container.leaflet-routing-container-hide {
