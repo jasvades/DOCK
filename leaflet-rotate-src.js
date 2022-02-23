@@ -1277,6 +1277,7 @@
                 if (!map.compassBearing.enabled()) {
                     // Go from touch to compass
                     map.touchRotate.disable();
+					map.setBearing(0);
                     //map.compassBearing.enable();
 
                     // console.log('state is now: compass');
