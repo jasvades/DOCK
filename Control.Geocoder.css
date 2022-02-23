@@ -7,6 +7,9 @@
 }
 
 .leaflet-touch .leaflet-control-geocoder {
+	width: 30px;
+	height: 30px;
+	line-height: 30px;
 	box-shadow: none;
 	background-clip: padding-box;
 	-webkit-border-radius: 4px;
