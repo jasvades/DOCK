@@ -7,7 +7,7 @@
 }
 
 .leaflet-touch .leaflet-control-geocoder {
-	width: 30px;
+	border: 2px solid rgba(0,0,0,0.2);
 	height: 30px;
 	line-height: 30px;
 	box-shadow: none;
@@ -33,9 +33,7 @@
 	vertical-align: middle;
 	position: relative;
 	float:right;
-	padding-left: 0px;
-	padding-right: 0px;
-	width: 0px;
+	width: 10px;
 	transition: width 0.125s ease-in;
 }
 
@@ -44,12 +42,12 @@
 	top: 50%;
 	-ms-transform: translateY(-50%);
 	transform: translateY(-50%);
-    width: 30px;
-	height: 30px;
+    display: block;
+	left: 5px;
+	margin: 0;
+	width: 20px;
+	height: 20px;
 	background-image: url(search-outline.svg);
-	background-repeat: no-repeat;
-	background-position: center;
-	background-size:70%;
 	cursor: pointer;
 }
 
@@ -69,6 +67,7 @@
 	color: #000;
 	position: relative;
 	float:right;
+	padding-left: 10px;
 }
 
 .leaflet-control-geocoder-form input:focus {
