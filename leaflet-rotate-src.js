@@ -1216,6 +1216,7 @@
                 .on(link, 'mousedown', this._handleMouseDown, this)
                 .on(link, 'click', L.DomEvent.stop)
                 .on(link, 'click', this._cycleState, this)
+                .on(link, 'contextmenu', this._cycleState, this)
                 .on(link, 'click', this._refocusOnMap, this);
 
             if (!L.Browser.any3d) {
@@ -1263,40 +1264,42 @@
         },
 
         _cycleState: function(ev) {
-            var map = this._map;
+            if ((ev.type === 'contextmenu' && isMobile) || (ev.type === 'click' && !isMobile)){
+				var map = this._map;
+				
+            	if (!map) { return; }
 
-            if (!map) { return; }
+            	if (!map.touchRotate.enabled() && !map.compassBearing.enabled()) {
+                	// Go from disabled to touch
+                	map.touchRotate.enable();
 
-            if (!map.touchRotate.enabled() && !map.compassBearing.enabled()) {
-                // Go from disabled to touch
-                map.touchRotate.enable();
+                	// console.log('state is now: touch rotate');
+            	} else {
 
-                // console.log('state is now: touch rotate');
-            } else {
+                	if (!map.compassBearing.enabled()) {
+                    	// Go from touch to compass
+                    	map.touchRotate.disable();
+						map.setBearing(0);
+                    	//map.compassBearing.enable();
 
-                if (!map.compassBearing.enabled()) {
-                    // Go from touch to compass
-                    map.touchRotate.disable();
-					map.setBearing(0);
-                    //map.compassBearing.enable();
+                    	// console.log('state is now: compass');
 
-                    // console.log('state is now: compass');
+                    	// It is possible that compass is not supported. If so,
+                    	// the hangler will automatically go from compass to disabled.
+                	} else {
+                    	// Go from compass to disabled
+                    	map.compassBearing.disable();
 
-                    // It is possible that compass is not supported. If so,
-                    // the hangler will automatically go from compass to disabled.
-                } else {
-                    // Go from compass to disabled
-                    map.compassBearing.disable();
+                    	// console.log('state is now: locked');
 
-                    // console.log('state is now: locked');
-
-                    map.setBearing(0);
-                    if (this.options.closeOnZeroBearing) {
-                        map.touchRotate.enable();
-                    }
-                }
-            }
-            this._restyle();
+                    	map.setBearing(0);
+                    	if (this.options.closeOnZeroBearing) {
+                        	map.touchRotate.enable();
+                    	}
+                	}
+            	}
+            	this._restyle();
+			}
         },
 
         _restyle: function() {
