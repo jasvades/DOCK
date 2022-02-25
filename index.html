@@ -187,13 +187,16 @@
 					.setContent('')
 					.openOn(this);
 					
-					L.Topography.getTopography(event.latlng,  {token: sleutel})
+					var latLng = L.latLng(event.latlng.lat,
+						(event.latlng.lng > 0) ? ((event.latlng.lng+180)%360)-180 : ((event.latlng.lng-180)%360)+180);
+						
+					L.Topography.getTopography(latLng, {token: sleutel})
 					.then((results) => {
 						popup
 						.setContent(
 							"Coördinaten: " + event.latlng.toString().substring(6) +
 							'<br>' +
-							"Hoogte: " + JSON.stringify(results.elevation).substring(1,7) + "m"
+							"Hoogte: " + JSON.stringify(results.elevation).substring(0, JSON.stringify(results.elevation).indexOf('.') + 2) + "m"
 						)
 					});
 				}
@@ -204,13 +207,16 @@
 					.setContent('')
 					.openOn(this);
 					
-					L.Topography.getTopography(event.latlng,  {token: sleutel})
+					var latLng = L.latLng(event.latlng.lat,
+						(event.latlng.lng > 0) ? ((event.latlng.lng+180)%360)-180 : ((event.latlng.lng-180)%360)+180);
+						
+					L.Topography.getTopography(latLng, {token: sleutel})
 					.then((results) => {
 						popup
 						.setContent(
 							"Coördinaten: " + event.latlng.toString().substring(6) +
 							'<br>' +
-							"Hoogte: " + JSON.stringify(results.elevation).substring(1,7) + "m"
+							"Hoogte: " + JSON.stringify(results.elevation).substring(0, JSON.stringify(results.elevation).indexOf('.') + 2) + "m"
 						)
 					});
 				}
