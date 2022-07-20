@@ -403,8 +403,8 @@
 											catch (error) {
 												alert(error.message + " - linenumber: " + error.lineNumber);
 											}
-											var blob = new Blob([gpx_file], { type: "application/gpx" });
-											saveAs(blob, filename);
+											var blob = new Blob([gpx_file], { type: "application/gpx+xml;charset=utf-8" });
+											saveAs(blob, filename + ".gpx");
 										}
 
 										map.removeLayer(my_location);
@@ -959,8 +959,8 @@
 																	catch (error) {
 																		alert(error.message + " - linenumber: " + error.lineNumber);
 																	}
-																	var blob = new Blob([gpx_file], { type: "application/gpx" });
-																	saveAs(blob, filename);
+																	var blob = new Blob([gpx_file], { type: "application/gpx+xml;charset=utf-8" });
+																	saveAs(blob, filename + ".gpx");
 																}
 							
 																control.remove();
