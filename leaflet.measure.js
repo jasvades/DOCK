@@ -81,8 +81,8 @@ L.Control.Measure = L.Control.extend({
 				catch (error) {
 					alert(error.message + " - linenumber: " + error.lineNumber);
 				}
-				var blob = new Blob([gpx_file], { type: "text/plain;charset=utf-8" });
-            	saveAs(blob, filename + ".gpx");
+				var blob = new Blob([gpx_file], { type: "application/gpx" });
+            	saveAs(blob, filename);
 			}
 			L.DomUtil.removeClass(this._container, 'leaflet-control-measure-on')
 			this._stopMeasuring()
