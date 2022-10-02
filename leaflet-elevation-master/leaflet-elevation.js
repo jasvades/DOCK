@@ -3745,18 +3745,6 @@
           value: function value(track) {
             return Math.round(track.descent || 0) + '&nbsp;' + _this._yLabel;
           }
-        },
-        "minslope": {
-          label: "Min Slope: ",
-          value: function value(track) {
-            return Math.round(track.slope_min || 0) + '&nbsp;' + slope.label;
-          }
-        },
-        "maxslope": {
-          label: "Max Slope: ",
-          value: function value(track) {
-            return Math.round(track.slope_max || 0) + '&nbsp;' + slope.label;
-          }
         }
       });
     });
